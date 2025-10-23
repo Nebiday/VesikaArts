@@ -1,4 +1,4 @@
-# 🎨 Web3 Artist Token System
+# 🎨 Web3 Artist Token System (VEsikaArts)
 
 Merkezi bir ana token (VesikaCoin) etrafında kurulmuş, sanatçıların kendi ERC20 token'larını oluşturabileceği ve işlem yapabileceği eksiksiz bir Web3 ekosistemi.
 
