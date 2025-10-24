@@ -98,8 +98,8 @@ Merkezi bir ana token (VesikaCoin) etrafında kurulmuş, sanatçıların kendi E
 
 1. **Projeyi klonlayın**
 ```bash
-git clone https://github.com/yourusername/web3-artist-token-system.git
-cd web3-artist-token-system
+git clone https://github.com/Nebiday/VesikaArts.git
+cd VesikaArts
 ```
 
 2. **Backend bağımlılıklarını yükleyin**
