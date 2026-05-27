@@ -1,51 +1,60 @@
 # 🎨 Web3 Artist Token System (VesikaArts)
 
-Merkezi bir ana token (VesikaCoin) etrafında kurulmuş, sanatçıların kendi ERC20 token'larını oluşturabileceği ve işlem yapabileceği eksiksiz bir Web3 ekosistemi.
+A complete Web3 ecosystem built around a central main token (VesikaCoin), where artists can create and trade their own ERC20 tokens.
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Özellikler](#-özellikler)
-- [Sistem Mimarisi](#-sistem-mimarisi)
-- [Teknoloji Stack](#-teknoloji-stack)
-- [Kurulum](#-kurulum)
-- [Kullanım](#-kullanım)
+- [Features](#-features)
+- [System Architecture](#-system-architecture)
+- [Tech Stack](#-tech-stack)
+- [Installation](#-installation)
+- [Usage](#-usage)
 - [Smart Contracts](#-smart-contracts)
 - [Frontend](#-frontend)
-- [Lisans](#-lisans)
+- [License](#-license)
 
-## ✨ Özellikler
+
+## ✨ Features
 
 ### 🪙 VesikaCoin (VSK)
-- Ana ekosistem token'ı
-- ETH ile satın alınabilir
-- Sanatçı token'ları için likidite sağlar
-- Role-based yetki sistemi
 
-### 🎭 Sanatçı Token Sistemi
-- Sanatçı kaydı ve onay mekanizması
-- Admin onayından sonra sanatçının kendi token'ını deploy etmesi
-- Özelleştirilebilir token parametreleri (isim, sembol, arz)
-- Factory pattern ile güvenli deployment
+- Main ecosystem token
+- Purchasable with ETH
+- Provides liquidity for artist tokens
+- Role-based permission system
 
-### 💱 Token Swap & Likidite
-- VesikaCoin ↔ Sanatçı Token takası
-- Automated Market Maker (AMM) modeli
-- Likidite havuzu yönetimi
-- %0.3 swap ücreti
-- Slippage koruması
 
-### 🛡️ Güvenlik
+### 🎭 Artist Token System
+
+- Artist registration and approval mechanism
+- Artists can deploy their own tokens after admin approval
+- Customizable token parameters (name, symbol, supply)
+- Secure deployment via factory pattern
+
+
+### 💱 Token Swap & Liquidity
+
+- VesikaCoin ↔ Artist Token swaps
+- Automated Market Maker (AMM) model
+- Liquidity pool management
+- 0.3% swap fee
+- Slippage protection
+
+
+### 🛡️ Security
+
 - Role-based access control (RBAC)
-- Admin, Artist, Liquidity Manager rolleri
-- Whitelist sistemi
-- Reentrancy koruması
+- Admin, Artist, and Liquidity Manager roles
+- Whitelist system
+- Reentrancy protection
 
-## 🏗️ Sistem Mimarisi
+
+## 🏗️ System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                      Frontend (React)                    │
-│  - Sanatçı Kaydı    - Token Yönetimi    - Swap UI       │
+│  - Artist Registration  - Token Management  - Swap UI   │
 └────────────────────────┬────────────────────────────────┘
                          │
                          ▼
@@ -53,198 +62,237 @@ Merkezi bir ana token (VesikaCoin) etrafında kurulmuş, sanatçıların kendi E
 │                   Smart Contracts                        │
 ├─────────────────┬──────────────────┬────────────────────┤
 │  VesikaCoin     │ ArtistToken      │   TokenSwap        │
-│  (Ana Token)    │ Factory          │   (AMM)            │
+│  (Main Token)   │ Factory          │   (AMM)            │
 ├─────────────────┼──────────────────┼────────────────────┤
 │  VesikaSale     │ Artist Tokens    │   Liquidity        │
 │  (ETH→VSK)      │ (ERC20)          │   Pools            │
 └─────────────────┴──────────────────┴────────────────────┘
 ```
 
-### Akış Şeması
+### Workflow
 
-1. **Sanatçı Kaydı**: Sanatçı profil bilgileriyle sisteme kayıt olur
-2. **Admin Onayı**: Admin sanatçıyı inceler ve onaylar
-3. **Token Talebi**: Onaylı sanatçı token parametrelerini belirler
-4. **Token Deployment**: Sanatçı kendi token'ını deploy eder
-5. **Likidite Havuzu**: Token için VSK ile likidite havuzu oluşturulur
-6. **Trading**: Kullanıcılar token'ları swap edebilir
+1. **Artist Registration**: The artist signs up with their profile information.
+2. **Admin Approval**: The admin reviews and approves the artist.
+3. **Token Request**: The approved artist defines their token parameters.
+4. **Token Deployment**: The artist deploys their own token.
+5. **Liquidity Pool**: A VSK-paired liquidity pool is created for the token.
+6. **Trading**: Users can swap tokens freely.
 
-## 🛠️ Teknoloji Stack
+
+## 🛠️ Tech Stack
 
 ### Smart Contracts
+
 - **Solidity**: ^0.8.19
-- **OpenZeppelin**: Güvenli contract kütüphaneleri
+- **OpenZeppelin**: Secure contract libraries
 - **Hardhat**: Development framework
 
+
 ### Frontend
+
 - **React**: 18.x
-- **Web3.js**: Blockchain etkileşimi
-- **React Router**: Sayfa yönlendirme
-- **CSS3**: Modern ve responsive tasarım
+- **Web3.js**: Blockchain interaction
+- **React Router**: Page routing
+- **CSS3**: Modern, responsive design
+
 
 ### Development Tools
+
 - **Hardhat Network**: Local blockchain
-- **Chai**: Test framework
-- **Ethers.js**: Ethereum kütüphanesi
+- **Chai**: Testing framework
+- **Ethers.js**: Ethereum library
 
-## 🚀 Kurulum
 
-### Gereksinimler
-- Node.js v16+ 
+## 🚀 Installation
+
+### Requirements
+
+- Node.js v16+
 - npm v8+
-- MetaMask tarayıcı eklentisi
+- MetaMask browser extension
 
-### Adımlar
 
-1. **Projeyi klonlayın**
+### Steps
+
+1. **Clone the repository**
+
 ```bash
 git clone https://github.com/Nebiday/VesikaArts.git
 cd VesikaArts
 ```
 
-2. **Backend bağımlılıklarını yükleyin**
+2. **Install backend dependencies**
+
 ```bash
 npm install
 ```
 
-3. **Frontend bağımlılıklarını yükleyin**
+3. **Install frontend dependencies**
+
 ```bash
 cd frontend
 npm install
 cd ..
 ```
 
-4. **Smart contract'ları derleyin**
+4. **Compile smart contracts**
+
 ```bash
 npx hardhat compile
 ```
 
-5. **Testleri çalıştırın**
+5. **Run tests**
+
 ```bash
 npx hardhat test
 ```
 
-## 💻 Kullanım
+
+## 💻 Usage
 
 ### Local Development
 
-1. **Hardhat node'u başlatın** (Terminal 1)
+1. **Start the Hardhat node** (Terminal 1)
+
 ```bash
 npx hardhat node
 ```
 
-2. **Contract'ları deploy edin** (Terminal 2)
+2. **Deploy the contracts** (Terminal 2)
+
 ```bash
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-3. **Frontend'i başlatın** (Terminal 3)
+3. **Start the frontend** (Terminal 3)
+
 ```bash
 cd frontend
 npm start
 ```
 
-4. **MetaMask'ı yapılandırın**
+4. **Configure MetaMask**
    - Network: Localhost 8545
    - Chain ID: 31337
-   - Test hesaplarından birini import edin
+   - Import one of the test accounts
 
-### Deployment Adresleri
 
-Deploy scriptleri otomatik olarak `deployments/localhost/deployment.json` dosyasına contract adreslerini kaydeder.
+### Deployment Addresses
+
+The deploy script automatically saves contract addresses to `deployments/localhost/deployment.json`.
+
 
 ## 📜 Smart Contracts
 
 ### VesikaCoin.sol
-Ana ekosistem token'ı. ERC20 standardı ile mint, burn ve yetkilendirme fonksiyonları.
 
-**Ana Fonksiyonlar:**
-- `mint(address to, uint256 amount)`: Token basma (ADMIN_ROLE)
-- `burn(uint256 amount)`: Token yakma
-- `grantRole(bytes32 role, address account)`: Rol verme
+The main ecosystem token. Implements the ERC20 standard with mint, burn, and authorization functions.
+
+**Main Functions:**
+
+- `mint(address to, uint256 amount)`: Mint tokens (ADMIN_ROLE)
+- `burn(uint256 amount)`: Burn tokens
+- `grantRole(bytes32 role, address account)`: Grant a role
+
 
 ### VesikaSale.sol
-Kullanıcıların ETH ile VesikaCoin satın almasını sağlar.
 
-**Ana Fonksiyonlar:**
-- `buyVSK()`: ETH karşılığında VSK satın alma
-- `setInventory(uint256 amount)`: Satış envanteri ayarlama (ADMIN)
-- `updateRate(uint256 rate)`: VSK/ETH oranı güncelleme (ADMIN)
+Allows users to purchase VesikaCoin with ETH.
+
+**Main Functions:**
+
+- `buyVSK()`: Purchase VSK in exchange for ETH
+- `setInventory(uint256 amount)`: Set the sale inventory (ADMIN)
+- `updateRate(uint256 rate)`: Update the VSK/ETH rate (ADMIN)
+
 
 ### ArtistTokenFactory.sol
-Sanatçı token'larının oluşturulması ve yönetimi.
 
-**Ana Fonksiyonlar:**
-- `registerArtist(...)`: Sanatçı kaydı
-- `approveArtist(address artist)`: Sanatçı onaylama (ADMIN)
-- `requestTokenCreation(...)`: Token oluşturma talebi
-- `approveTokenRequest(uint256 requestId)`: Token talebi onaylama (ADMIN)
-- `deployToken(uint256 requestId)`: Token deployment (Artist)
+Creation and management of artist tokens.
+
+**Main Functions:**
+
+- `registerArtist(...)`: Register an artist
+- `approveArtist(address artist)`: Approve an artist (ADMIN)
+- `requestTokenCreation(...)`: Request token creation
+- `approveTokenRequest(uint256 requestId)`: Approve a token request (ADMIN)
+- `deployToken(uint256 requestId)`: Deploy the token (Artist)
+
 
 ### TokenSwap.sol
-VesikaCoin ve sanatçı token'ları arasında swap işlemleri.
 
-**Ana Fonksiyonlar:**
-- `createLiquidityPool(...)`: Likidite havuzu oluşturma
+Handles swaps between VesikaCoin and artist tokens.
+
+**Main Functions:**
+
+- `createLiquidityPool(...)`: Create a liquidity pool
 - `swapVSKForArtistToken(...)`: VSK → Artist Token
 - `swapArtistTokenForVSK(...)`: Artist Token → VSK
-- `getAmountOut(...)`: Swap miktarı hesaplama
+- `getAmountOut(...)`: Calculate swap output amount
+
 
 ## 🎨 Frontend
 
-### Sayfalar
+### Pages
 
-- **`/`**: Ana sayfa - Sistem özeti
-- **`/register`**: Sanatçı kayıt formu
-- **`/artist`**: Sanatçı dashboard (token yönetimi)
-- **`/admin`**: Admin panel (onay işlemleri)
-- **`/buy`**: VSK satın alma sayfası
+- **`/`**: Home page — System overview
+- **`/register`**: Artist registration form
+- **`/artist`**: Artist dashboard (token management)
+- **`/admin`**: Admin panel (approval operations)
+- **`/buy`**: VSK purchase page
 - **`/swap`**: Token swap interface
+
 
 ### Context API
 
-**ContractContext**: Tüm contract etkileşimlerini merkezi olarak yönetir.
-- Contract instance'ları
-- Wallet bağlantısı
-- Transaction fonksiyonları
+**ContractContext**: Centrally manages all contract interactions.
 
-## 🧪 Test
+- Contract instances
+- Wallet connection
+- Transaction functions
+
+
+## 🧪 Testing
 
 ```bash
-# Tüm testleri çalıştır
+# Run all tests
 npx hardhat test
 
-# Belirli bir testi çalıştır
+# Run a specific test
 npx hardhat test test/VesikaCoin.test.js
 
 # Test coverage
 npx hardhat coverage
 ```
 
-## 🔐 Güvenlik
 
-- ✅ OpenZeppelin contract'ları kullanılmıştır
-- ✅ Reentrancy guard implementasyonu
+## 🔐 Security
+
+- ✅ Built on OpenZeppelin contracts
+- ✅ Reentrancy guard implementation
 - ✅ Role-based access control
-- ✅ Input validasyonları
-- ✅ Safe transfer implementasyonları
+- ✅ Input validation
+- ✅ Safe transfer implementations
 
-## 📝 Lisans
 
-MIT License - Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+## 📝 License
 
-## 🤝 Katkıda Bulunma
+MIT License — see the [LICENSE](https://github.com/Nebiday/VesikaArts/blob/main/LICENSE) file for details.
 
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add some amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
 
-## 📧 İletişim
+## 🤝 Contributing
 
-Sorularınız için GitHub Issues kullanabilirsiniz.
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+
+## 📧 Contact
+
+For questions, please use GitHub Issues.
 
 ---
 
-⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!
+⭐ If you like this project, don't forget to give it a star!
