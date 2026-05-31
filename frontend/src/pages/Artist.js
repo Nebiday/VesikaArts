@@ -232,7 +232,7 @@ const Artist = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!regForm.name || !regForm.bio) {
-      toast.error('İsim ve bio alanları zorunludur');
+      toast.error('Name and bio fields are required');
       return;
     }
 
@@ -257,7 +257,7 @@ const Artist = () => {
   const handleTokenRequest = async (e) => {
     e.preventDefault();
     if (!tokenForm.name || !tokenForm.symbol) {
-      toast.error('Token ismi ve sembolü zorunludur');
+      toast.error('Token name and symbol are required');
       return;
     }
 
@@ -270,8 +270,8 @@ const Artist = () => {
       const result = await factoryActions.requestToken(
         tokenForm.name,
         tokenForm.symbol,
-        standardSupply,           // maxSupply (standart 1M)
-        standardSwapRate,         // initialSwapRate (AMM kullanıldığı için önemsiz)
+        standardSupply,           // maxSupply (standard 1M)
+        standardSwapRate,         // initialSwapRate (irrelevant since AMM is used)
         tokenForm.description,    // description
         JSON.stringify({          // metadata
           createdAt: Date.now(),
@@ -280,12 +280,12 @@ const Artist = () => {
         })
       );
       
-      toast.success('Token talebi başarıyla gönderildi!');
+      toast.success('Token request submitted successfully!');
       await loadArtistData();
       setTokenForm({ name: '', symbol: '', description: '' });
     } catch (error) {
       console.error('Token request error:', error);
-      toast.error('Token talebi başarısız: ' + error.message);
+      toast.error('Token request failed: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -302,10 +302,10 @@ const Artist = () => {
 
   const getStatusLabel = (status) => {
     switch (status) {
-      case 'pending': return 'Beklemede';
-      case 'approved': return 'Onaylandı';
-      case 'rejected': return 'Reddedildi';
-      default: return 'Bilinmiyor';
+      case 'pending': return 'Pending';
+      case 'approved': return 'Approved';
+      case 'rejected': return 'Rejected';
+      default: return 'Unknown';
     }
   };
 
@@ -313,11 +313,11 @@ const Artist = () => {
     setLoading(true);
     try {
       await factoryActions.deployToken(requestId);
-      toast.success('Token başarıyla deploy edildi!');
+      toast.success('Token deployed successfully!');
       await loadArtistData();
     } catch (error) {
       console.error('Deploy error:', error);
-      toast.error('Token deploy edilemedi: ' + error.message);
+      toast.error('Token deployment failed: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -325,7 +325,7 @@ const Artist = () => {
 
   const handleCreatePool = async (tokenAddress) => {
     if (!poolForm.mainAmount || !poolForm.artistAmount) {
-      toast.error('Lütfen tüm alanları doldurun');
+      toast.error('Please fill in all fields');
       return;
     }
 
@@ -336,13 +336,13 @@ const Artist = () => {
         poolForm.mainAmount,
         poolForm.artistAmount
       );
-      toast.success('Liquidity pool başarıyla oluşturuldu!');
+      toast.success('Liquidity pool created successfully!');
       setPoolForm({ mainAmount: '', artistAmount: '' });
       setShowPoolForm(null);
       await loadArtistData();
     } catch (error) {
       console.error('Pool creation error:', error);
-      toast.error('Pool oluşturulurken hata oluştu: ' + error.message);
+      toast.error('An error occurred while creating the pool: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -352,11 +352,11 @@ const Artist = () => {
     return (
       <ArtistContainer>
         <Container>
-          <Title>Sanatçı Paneli</Title>
+          <Title>Artist Panel</Title>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <h3>Cüzdanınızı bağlayın</h3>
-              <p>Sanatçı paneline erişmek için önce cüzdanınızı bağlamanız gerekiyor.</p>
+              <h3>Connect your wallet</h3>
+              <p>You need to connect your wallet first to access the artist panel.</p>
             </div>
           </Card>
         </Container>
@@ -367,21 +367,21 @@ const Artist = () => {
   return (
     <ArtistContainer>
       <Container>
-        <Title>Sanatçı Paneli</Title>
+        <Title>Artist Panel</Title>
 
         <TabContainer>
           <Tab 
             active={activeTab === 'register'} 
             onClick={() => setActiveTab('register')}
           >
-            Kayıt Ol
+            Register
           </Tab>
           <Tab 
             active={activeTab === 'tokens'} 
             onClick={() => setActiveTab('tokens')}
             disabled={!artistInfo?.isRegistered}
           >
-            Token Yönetimi
+            Token Management
           </Tab>
         </TabContainer>
 
@@ -392,7 +392,7 @@ const Artist = () => {
             transition={{ duration: 0.5 }}
           >
             <CardTitle>
-              🎨 Sanatçı Kaydı
+              🎨 Artist Registration
             </CardTitle>
 
             {artistInfo?.isRegistered ? (
@@ -405,23 +405,23 @@ const Artist = () => {
                   marginBottom: '1.5rem',
                   textAlign: 'center'
                 }}>
-                  ✅ Sanatçı olarak kayıtlısınız!
+                  ✅ You are registered as an artist!
                 </div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
                   <InfoItem>
-                    <InfoLabel>İsim</InfoLabel>
+                    <InfoLabel>Name</InfoLabel>
                     <InfoValue>{artistInfo.name}</InfoValue>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Durum</InfoLabel>
+                    <InfoLabel>Status</InfoLabel>
                     <StatusBadge status={artistInfo.isApproved ? 'approved' : 'pending'}>
-                      {artistInfo.isApproved ? 'Onaylandı' : 'Onay Bekliyor'}
+                      {artistInfo.isApproved ? 'Approved' : 'Pending Approval'}
                     </StatusBadge>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Kayıt Tarihi</InfoLabel>
-                    <InfoValue>{new Date(artistInfo.registrationTime * 1000).toLocaleDateString('tr-TR')}</InfoValue>
+                    <InfoLabel>Registration Date</InfoLabel>
+                    <InfoValue>{new Date(artistInfo.registrationTime * 1000).toLocaleDateString('en-US')}</InfoValue>
                   </InfoItem>
                 </div>
 
@@ -435,12 +435,12 @@ const Artist = () => {
             ) : (
               <Form onSubmit={handleRegister}>
                 <InputGroup>
-                  <Label>Sanatçı İsmi *</Label>
+                  <Label>Artist Name *</Label>
                   <Input
                     type="text"
                     value={regForm.name}
                     onChange={(e) => setRegForm({...regForm, name: e.target.value})}
-                    placeholder="Sanatçı isminizi girin"
+                    placeholder="Enter your artist name"
                     required
                   />
                 </InputGroup>
@@ -450,7 +450,7 @@ const Artist = () => {
                   <TextArea
                     value={regForm.bio}
                     onChange={(e) => setRegForm({...regForm, bio: e.target.value})}
-                    placeholder="Kendinizi tanıtın..."
+                    placeholder="Introduce yourself..."
                     required
                   />
                 </InputGroup>
@@ -466,12 +466,12 @@ const Artist = () => {
                 </InputGroup>
 
                 <InputGroup>
-                  <Label>Sosyal Medya</Label>
+                  <Label>Social Media</Label>
                   <Input
                     type="text"
                     value={regForm.socialMedia}
                     onChange={(e) => setRegForm({...regForm, socialMedia: e.target.value})}
-                    placeholder="@username veya profil linki"
+                    placeholder="@username or profile link"
                   />
                 </InputGroup>
 
@@ -481,7 +481,7 @@ const Artist = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {loading ? 'Kayıt Yapılıyor...' : 'Sanatçı Olarak Kayıt Ol'}
+                  {loading ? 'Registering...' : 'Register as Artist'}
                 </Button>
               </Form>
             )}
@@ -497,30 +497,30 @@ const Artist = () => {
               transition={{ duration: 0.5 }}
             >
               <CardTitle>
-                🪙 Token Talebi Oluştur
+                🪙 Create Token Request
               </CardTitle>
 
               {artistInfo?.isApproved ? (
                 <Form onSubmit={handleTokenRequest}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                     <InputGroup>
-                      <Label>Token İsmi *</Label>
+                      <Label>Token Name *</Label>
                       <Input
                         type="text"
                         value={tokenForm.name}
                         onChange={(e) => setTokenForm({...tokenForm, name: e.target.value})}
-                        placeholder="Örn: Artist Coin"
+                        placeholder="e.g. Artist Coin"
                         required
                       />
                     </InputGroup>
 
                     <InputGroup>
-                      <Label>Token Sembolü *</Label>
+                      <Label>Token Symbol *</Label>
                       <Input
                         type="text"
                         value={tokenForm.symbol}
                         onChange={(e) => setTokenForm({...tokenForm, symbol: e.target.value.toUpperCase()})}
-                        placeholder="Örn: ART"
+                        placeholder="e.g. ART"
                         maxLength="10"
                         required
                       />
@@ -528,19 +528,19 @@ const Artist = () => {
                   </div>
 
                   <InputGroup>
-                    <Label>Açıklama</Label>
+                    <Label>Description</Label>
                     <TextArea
                       value={tokenForm.description}
                       onChange={(e) => setTokenForm({...tokenForm, description: e.target.value})}
-                      placeholder="Token'ınızın amacını ve kullanım alanını açıklayın..."
+                      placeholder="Describe the purpose and use case of your token..."
                     />
                   </InputGroup>
 
                   <div style={{ padding: '1rem', background: '#f3f4f6', borderRadius: '0.5rem', marginBottom: '1rem' }}>
                     <p style={{ margin: 0, color: '#6b7280', fontSize: '0.875rem' }}>
-                      ℹ️ <strong>Standart Token Özellikleri:</strong><br/>
-                      • İlk Arz: 1,000,000 token (otomatik)<br/>
-                      • Fiyat: Liquidity pool oranlarıyla belirlenir (AMM)
+                      ℹ️ <strong>Standard Token Properties:</strong><br/>
+                      • Initial Supply: 1,000,000 tokens (automatic)<br/>
+                      • Price: Determined by liquidity pool ratios (AMM)
                     </p>
                   </div>
 
@@ -550,13 +550,13 @@ const Artist = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {loading ? 'Talep Gönderiliyor...' : 'Token Talebi Gönder'}
+                    {loading ? 'Submitting Request...' : 'Submit Token Request'}
                   </Button>
                 </Form>
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                  <h3>Onay Bekleniyor</h3>
-                  <p>Token talebi oluşturmak için admin onayı beklemeniz gerekiyor.</p>
+                  <h3>Awaiting Approval</h3>
+                  <p>You need to wait for admin approval to create a token request.</p>
                 </div>
               )}
             </Card>
@@ -568,7 +568,7 @@ const Artist = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <CardTitle>
-                📋 Token Taleplerim
+                📋 My Token Requests
               </CardTitle>
 
               {tokenRequests.length > 0 ? (
@@ -583,16 +583,16 @@ const Artist = () => {
 
                     <RequestInfo>
                       <InfoItem>
-                        <InfoLabel>📊 Toplam Arz</InfoLabel>
+                        <InfoLabel>📊 Total Supply</InfoLabel>
                         <InfoValue>1,000,000 {request.symbol}</InfoValue>
                       </InfoItem>
                       <InfoItem>
-                        <InfoLabel>📅 Talep Tarihi</InfoLabel>
-                        <InfoValue>{new Date(request.timestamp * 1000).toLocaleDateString('tr-TR')}</InfoValue>
+                        <InfoLabel>📅 Request Date</InfoLabel>
+                        <InfoValue>{new Date(request.timestamp * 1000).toLocaleDateString('en-US')}</InfoValue>
                       </InfoItem>
                       {request.tokenAddress && request.tokenAddress !== '0x0000000000000000000000000000000000000000' && (
                         <InfoItem>
-                          <InfoLabel>📍 Token Adresi</InfoLabel>
+                          <InfoLabel>📍 Token Address</InfoLabel>
                           <InfoValue style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
                             {request.tokenAddress.substring(0, 10)}...{request.tokenAddress.substring(38)}
                           </InfoValue>
@@ -602,12 +602,12 @@ const Artist = () => {
 
                     {request.description && (
                       <div>
-                        <InfoLabel>Açıklama</InfoLabel>
+                        <InfoLabel>Description</InfoLabel>
                         <InfoValue>{request.description}</InfoValue>
                       </div>
                     )}
                     
-                    {/* Deploy butonu - sadece onaylandı ve henüz deploy edilmemiş token'lar için */}
+                    {/* Deploy button - only for approved and not-yet-deployed tokens */}
                     {getStatusText(request.status) === 'approved' && 
                      (!request.tokenAddress || request.tokenAddress === '0x0000000000000000000000000000000000000000') && (
                       <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
@@ -618,33 +618,33 @@ const Artist = () => {
                           whileTap={{ scale: 0.98 }}
                           style={{ width: '100%' }}
                         >
-                          {loading ? 'Deploy Ediliyor...' : '🚀 Tokenı Deploy Et'}
+                          {loading ? 'Deploying...' : '🚀 Deploy Token'}
                         </Button>
                       </div>
                     )}
 
-                    {/* Pool oluşturma - deploy edilmiş tokenlar için */}
+                    {/* Pool creation - for deployed tokens */}
                     {request.tokenAddress && request.tokenAddress !== '0x0000000000000000000000000000000000000000' && (
                       <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
                         {showPoolForm === request.id ? (
                           <div>
-                            <h4 style={{ marginBottom: '1rem', color: '#1f2937' }}>💧 Liquidity Pool Oluştur</h4>
+                            <h4 style={{ marginBottom: '1rem', color: '#1f2937' }}>💧 Create Liquidity Pool</h4>
                             <InputGroup>
-                              <Label>VesikaCoin Miktarı</Label>
+                              <Label>VesikaCoin Amount</Label>
                               <Input
                                 type="number"
                                 value={poolForm.mainAmount}
                                 onChange={(e) => setPoolForm({...poolForm, mainAmount: e.target.value})}
-                                placeholder="Örn: 100"
+                                placeholder="e.g. 100"
                               />
                             </InputGroup>
                             <InputGroup>
-                              <Label>{request.symbol} Miktarı</Label>
+                              <Label>{request.symbol} Amount</Label>
                               <Input
                                 type="number"
                                 value={poolForm.artistAmount}
                                 onChange={(e) => setPoolForm({...poolForm, artistAmount: e.target.value})}
-                                placeholder="Örn: 100"
+                                placeholder="e.g. 100"
                               />
                             </InputGroup>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -655,7 +655,7 @@ const Artist = () => {
                                 whileTap={{ scale: 0.98 }}
                                 style={{ flex: 1 }}
                               >
-                                {loading ? 'Oluşturuluyor...' : 'Pool Oluştur'}
+                                {loading ? 'Creating...' : 'Create Pool'}
                               </Button>
                               <Button
                                 onClick={() => {
@@ -667,7 +667,7 @@ const Artist = () => {
                                 whileTap={{ scale: 0.98 }}
                                 style={{ flex: 1, background: '#6b7280' }}
                               >
-                                İptal
+                                Cancel
                               </Button>
                             </div>
                           </div>
@@ -679,7 +679,7 @@ const Artist = () => {
                             whileTap={{ scale: 0.98 }}
                             style={{ width: '100%', background: 'linear-gradient(135deg, #10b981, #059669)' }}
                           >
-                            💧 Liquidity Pool Oluştur
+                            💧 Create Liquidity Pool
                           </Button>
                         )}
                       </div>
@@ -688,8 +688,8 @@ const Artist = () => {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                  <h3>Henüz Token Talebiniz Yok</h3>
-                  <p>Yukarıdaki formu kullanarak ilk token talebinizi oluşturun.</p>
+                  <h3>You Have No Token Requests Yet</h3>
+                  <p>Create your first token request using the form above.</p>
                 </div>
               )}
             </Card>

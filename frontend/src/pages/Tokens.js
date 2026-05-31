@@ -223,7 +223,7 @@ const Tokens = () => {
   // Safe timestamp formatting
   const formatTimestamp = (timestamp) => {
     try {
-      if (!timestamp || timestamp === 0) return 'Bilinmiyor';
+      if (!timestamp || timestamp === 0) return 'Unknown';
       
       let ts = timestamp;
       if (typeof timestamp === 'object' && timestamp.toString) {
@@ -240,12 +240,12 @@ const Tokens = () => {
       }
       
       if (isNaN(date.getTime())) {
-        return 'Geçersiz Tarih';
+        return 'Invalid Date';
       }
       
-      return date.toLocaleDateString('tr-TR');
+      return date.toLocaleDateString('en-US');
     } catch (error) {
-      return 'Tarih Hatası';
+      return 'Date Error';
     }
   };
 
@@ -347,7 +347,7 @@ const Tokens = () => {
         <Container>
           <Header>
             <h1>🪙 Deployed Tokens</h1>
-            <p>Platformda deploy edilmiş tokenları keşfedin</p>
+            <p>Explore tokens deployed on the platform</p>
           </Header>
           <LoadingSpinner />
         </Container>
@@ -360,7 +360,7 @@ const Tokens = () => {
       <Container>
         <Header>
           <h1>🪙 Deployed Tokens</h1>
-          <p>Platformda deploy edilmiş tokenları keşfedin</p>
+          <p>Explore tokens deployed on the platform</p>
         </Header>
 
         <StatsSection>
@@ -369,21 +369,21 @@ const Tokens = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.totalTokens}</h3>
-            <p>Toplam Token</p>
+            <p>Total Tokens</p>
           </StatCard>
           <StatCard
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.totalSupply}</h3>
-            <p>Toplam Supply</p>
+            <p>Total Supply</p>
           </StatCard>
           <StatCard
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.activeTokens}</h3>
-            <p>Aktif Token</p>
+            <p>Active Tokens</p>
           </StatCard>
         </StatsSection>
 
@@ -418,7 +418,7 @@ const Tokens = () => {
                     </InfoValue>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Deploy Tarihi</InfoLabel>
+                    <InfoLabel>Deploy Date</InfoLabel>
                     <InfoValue>
                       {formatTimestamp(token.timestamp)}
                     </InfoValue>
@@ -427,13 +427,13 @@ const Tokens = () => {
 
                 {token.description && (
                   <TokenDescription>
-                    <h4>📝 Açıklama</h4>
+                    <h4>📝 Description</h4>
                     <p>{token.description}</p>
                   </TokenDescription>
                 )}
 
                 <ArtistInfo>
-                  <h4>👨‍🎨 Sanatçı</h4>
+                  <h4>👨‍🎨 Artist</h4>
                   <p>{token.artistName}</p>
                   <p style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
                     {token.artist.slice(0, 10)}...{token.artist.slice(-8)}
@@ -444,8 +444,8 @@ const Tokens = () => {
           </TokensGrid>
         ) : (
           <EmptyState>
-            <h3>🚀 Henüz Token Deploy Edilmemiş</h3>
-            <p>Platformda henüz deploy edilmiş token bulunmamaktadır.</p>
+            <h3>🚀 No Tokens Deployed Yet</h3>
+            <p>There are no tokens deployed on the platform yet.</p>
           </EmptyState>
         )}
       </Container>

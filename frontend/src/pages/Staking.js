@@ -182,10 +182,10 @@ const Staking = () => {
   const [loading, setLoading] = useState(false);
 
   const lockPeriodOptions = [
-    { value: 30 * 24 * 60 * 60, label: '30 Gün (5% APY)', apy: 5 },
-    { value: 90 * 24 * 60 * 60, label: '90 Gün (7% APY)', apy: 7 },
-    { value: 180 * 24 * 60 * 60, label: '180 Gün (10% APY)', apy: 10 },
-    { value: 365 * 24 * 60 * 60, label: '365 Gün (15% APY)', apy: 15 },
+    { value: 30 * 24 * 60 * 60, label: '30 Days (5% APY)', apy: 5 },
+    { value: 90 * 24 * 60 * 60, label: '90 Days (7% APY)', apy: 7 },
+    { value: 180 * 24 * 60 * 60, label: '180 Days (10% APY)', apy: 10 },
+    { value: 365 * 24 * 60 * 60, label: '365 Days (15% APY)', apy: 15 },
   ];
 
   useEffect(() => {
@@ -212,12 +212,12 @@ const Staking = () => {
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) <= 0) {
-      toast.error('Geçerli bir miktar girin');
+      toast.error('Enter a valid amount');
       return;
     }
 
     if (parseFloat(stakeAmount) > parseFloat(balance)) {
-      toast.error('Yetersiz bakiye');
+      toast.error('Insufficient balance');
       return;
     }
 
@@ -258,7 +258,7 @@ const Staking = () => {
   };
 
   const formatDate = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleDateString('tr-TR');
+    return new Date(timestamp * 1000).toLocaleDateString('en-US');
   };
 
   const getTimeRemaining = () => {
@@ -268,12 +268,12 @@ const Staking = () => {
     const now = Math.floor(Date.now() / 1000);
     const remaining = unlockTime - now;
     
-    if (remaining <= 0) return 'Kilit süresi doldu';
+    if (remaining <= 0) return 'Lock period ended';
     
     const days = Math.floor(remaining / (24 * 60 * 60));
     const hours = Math.floor((remaining % (24 * 60 * 60)) / (60 * 60));
     
-    return `${days} gün ${hours} saat`;
+    return `${days} days ${hours} hours`;
   };
 
   if (!isConnected) {
@@ -283,8 +283,8 @@ const Staking = () => {
           <Title>Staking</Title>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <h3>Cüzdanınızı bağlayın</h3>
-              <p>Staking yapmak için önce cüzdanınızı bağlamanız gerekiyor.</p>
+              <h3>Connect your wallet</h3>
+              <p>You need to connect your wallet first to stake.</p>
             </div>
           </Card>
         </Container>
@@ -305,18 +305,18 @@ const Staking = () => {
             transition={{ duration: 0.5 }}
           >
             <CardTitle>
-              💎 Stake Et
+              💎 Stake
             </CardTitle>
 
             <InfoGrid>
               <InfoItem>
-                <InfoLabel>Bakiyeniz</InfoLabel>
+                <InfoLabel>Your Balance</InfoLabel>
                 <InfoValue>{parseFloat(balance).toFixed(4)} VSK</InfoValue>
               </InfoItem>
             </InfoGrid>
 
             <APYTable>
-              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>APY Oranları</h4>
+              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>APY Rates</h4>
               {lockPeriodOptions.map((option, index) => (
                 <APYRow key={index}>
                   <span>{option.label.split('(')[0]}</span>
@@ -330,7 +330,7 @@ const Staking = () => {
             {!stakeInfo?.isActive && (
               <>
                 <InputGroup>
-                  <Label>Stake Miktarı (VSK)</Label>
+                  <Label>Stake Amount (VSK)</Label>
                   <Input
                     type="number"
                     value={stakeAmount}
@@ -341,7 +341,7 @@ const Staking = () => {
                 </InputGroup>
 
                 <InputGroup>
-                  <Label>Kilit Süresi</Label>
+                  <Label>Lock Period</Label>
                   <Select
                     value={lockPeriod}
                     onChange={(e) => setLockPeriod(parseInt(e.target.value))}
@@ -360,15 +360,15 @@ const Staking = () => {
                   onClick={handleStake}
                   disabled={loading || !stakeAmount}
                 >
-                  {loading ? 'Stake Ediliyor...' : 'Stake Et'}
+                  {loading ? 'Staking...' : 'Stake'}
                 </Button>
               </>
             )}
 
             {stakeInfo?.isActive && (
               <div style={{ textAlign: 'center', color: '#6b7280' }}>
-                <p>Zaten aktif bir stake'iniz var.</p>
-                <p>Yeni stake yapmak için önce mevcut stake'inizi sonlandırın.</p>
+                <p>You already have an active stake.</p>
+                <p>To create a new stake, end your current stake first.</p>
               </div>
             )}
           </Card>
@@ -380,33 +380,33 @@ const Staking = () => {
             transition={{ duration: 0.5 }}
           >
             <CardTitle>
-              📊 Mevcut Stake
+              📊 Current Stake
             </CardTitle>
 
             {stakeInfo?.isActive ? (
               <>
                 <InfoGrid>
                   <InfoItem>
-                    <InfoLabel>Stake Miktarı</InfoLabel>
+                    <InfoLabel>Stake Amount</InfoLabel>
                     <InfoValue>{parseFloat(stakeInfo.amount).toFixed(4)} VSK</InfoValue>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Başlangıç Tarihi</InfoLabel>
+                    <InfoLabel>Start Date</InfoLabel>
                     <InfoValue>{formatDate(stakeInfo.timestamp)}</InfoValue>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Kilit Süresi</InfoLabel>
-                    <InfoValue>{Math.floor(stakeInfo.lockPeriod / (24 * 60 * 60))} Gün</InfoValue>
+                    <InfoLabel>Lock Period</InfoLabel>
+                    <InfoValue>{Math.floor(stakeInfo.lockPeriod / (24 * 60 * 60))} Days</InfoValue>
                   </InfoItem>
                   <InfoItem>
-                    <InfoLabel>Kalan Süre</InfoLabel>
+                    <InfoLabel>Time Remaining</InfoLabel>
                     <InfoValue>{getTimeRemaining()}</InfoValue>
                   </InfoItem>
                 </InfoGrid>
 
                 <RewardCard>
                   <RewardAmount>{parseFloat(pendingReward).toFixed(6)} VSK</RewardAmount>
-                  <RewardLabel>Bekleyen Ödül</RewardLabel>
+                  <RewardLabel>Pending Reward</RewardLabel>
                 </RewardCard>
 
                 {parseFloat(pendingReward) > 0 && (
@@ -417,11 +417,11 @@ const Staking = () => {
                     disabled={loading}
                     style={{ marginBottom: '1rem' }}
                   >
-                    {loading ? 'Ödüller Alınıyor...' : 'Ödülleri Al'}
+                    {loading ? 'Claiming Rewards...' : 'Claim Rewards'}
                   </Button>
                 )}
 
-                {getTimeRemaining() === 'Kilit süresi doldu' && (
+                {getTimeRemaining() === 'Lock period ended' && (
                   <Button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -429,14 +429,14 @@ const Staking = () => {
                     disabled={loading}
                     style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)' }}
                   >
-                    {loading ? 'Unstake Ediliyor...' : 'Unstake Et'}
+                    {loading ? 'Unstaking...' : 'Unstake'}
                   </Button>
                 )}
               </>
             ) : (
               <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                <h3>Aktif Stake Yok</h3>
-                <p>Ödül kazanmaya başlamak için VSK stake edin.</p>
+                <h3>No Active Stake</h3>
+                <p>Stake VSK to start earning rewards.</p>
               </div>
             )}
           </Card>
@@ -449,25 +449,25 @@ const Staking = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <CardTitle>
-            ℹ️ Staking Hakkında
+            ℹ️ About Staking
           </CardTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div>
-              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>Nasıl Çalışır?</h4>
+              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>How It Works?</h4>
               <ul style={{ color: '#6b7280', lineHeight: '1.6' }}>
-                <li>VSK token'larınızı belirli bir süre kilitleyin</li>
-                <li>Kilit süresine göre yıllık ödül kazanın</li>
-                <li>Stake edenler 1.5x oy gücü elde eder</li>
-                <li>Ödüller günlük olarak hesaplanır</li>
+                <li>Lock your VSK tokens for a fixed period</li>
+                <li>Earn annual rewards based on the lock period</li>
+                <li>Stakers get 1.5x voting power</li>
+                <li>Rewards are calculated daily</li>
               </ul>
             </div>
             <div>
-              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>Önemli Notlar</h4>
+              <h4 style={{ marginBottom: '1rem', color: '#374151' }}>Important Notes</h4>
               <ul style={{ color: '#6b7280', lineHeight: '1.6' }}>
-                <li>Minimum kilit süresi 30 gündür</li>
-                <li>Erken çıkış mümkün değildir</li>
-                <li>Ödüller otomatik olarak birleşir</li>
-                <li>Maksimum kilit süresi 365 gündür</li>
+                <li>The minimum lock period is 30 days</li>
+                <li>Early withdrawal is not possible</li>
+                <li>Rewards are automatically compounded</li>
+                <li>The maximum lock period is 365 days</li>
               </ul>
             </div>
           </div>

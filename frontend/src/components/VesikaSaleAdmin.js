@@ -120,12 +120,12 @@ const VesikaSaleAdmin = () => {
 
   const handleUpdateRate = async () => {
     if (!rateForm || rateForm === '0') {
-      toast.error('Geçerli bir oran girin');
+      toast.error('Enter a valid rate');
       return;
     }
 
     if (!contracts.vesikaSale) {
-      toast.error('VesikaSale kontratı yüklenmedi');
+      toast.error('VesikaSale contract not loaded');
       return;
     }
 
@@ -133,14 +133,14 @@ const VesikaSaleAdmin = () => {
     try {
       const rateWei = ethers.utils.parseEther(rateForm);
       const tx = await contracts.vesikaSale.updateRate(rateWei);
-      toast.success('Oran güncelleniyor...');
+      toast.success('Updating rate...');
       await tx.wait();
-      toast.success('Oran başarıyla güncellendi!');
+      toast.success('Rate updated successfully!');
       await loadSaleInfo();
       setRateForm('');
     } catch (error) {
       console.error('Error updating rate:', error);
-      toast.error('Oran güncellenemedi: ' + (error.message || 'Bilinmeyen hata'));
+      toast.error('Failed to update rate: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -148,12 +148,12 @@ const VesikaSaleAdmin = () => {
 
   const handleAddInventory = async () => {
     if (!inventoryForm || inventoryForm === '0') {
-      toast.error('Geçerli bir miktar girin');
+      toast.error('Enter a valid amount');
       return;
     }
 
     if (!contracts.vesikaSale) {
-      toast.error('VesikaSale kontratı yüklenmedi');
+      toast.error('VesikaSale contract not loaded');
       return;
     }
 
@@ -161,59 +161,59 @@ const VesikaSaleAdmin = () => {
     try {
       const amountWei = ethers.utils.parseEther(inventoryForm);
       const tx = await contracts.vesikaSale.addInventory(amountWei);
-      toast.success('Envanter ekleniyor...');
+      toast.success('Adding inventory...');
       await tx.wait();
-      toast.success(`${inventoryForm} VSK envantere eklendi!`);
+      toast.success(`${inventoryForm} VSK added to inventory!`);
       await loadSaleInfo();
       setInventoryForm('');
     } catch (error) {
       console.error('Error adding inventory:', error);
-      toast.error('Envanter eklenemedi: ' + (error.message || 'Bilinmeyen hata'));
+      toast.error('Failed to add inventory: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
   };
 
   if (!saleInfo) {
-    return <div>Yükleniyor...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
     <SaleSection>
-      <h2 style={{ marginBottom: '1.5rem', color: '#1f2937' }}>💎 VesikaCoin Satış Yönetimi</h2>
+      <h2 style={{ marginBottom: '1.5rem', color: '#1f2937' }}>💎 VesikaCoin Sale Management</h2>
 
-      {/* Mevcut Durum */}
+      {/* Current Status */}
       <InfoGrid>
         <InfoCard>
-          <InfoLabel>Mevcut Oran</InfoLabel>
+          <InfoLabel>Current Rate</InfoLabel>
           <InfoValue>{parseFloat(saleInfo.rate).toLocaleString()}</InfoValue>
           <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>VSK per ETH</div>
         </InfoCard>
         <InfoCard>
-          <InfoLabel>📦 Satışta Kalan</InfoLabel>
+          <InfoLabel>📦 Remaining for Sale</InfoLabel>
           <InfoValue>{parseFloat(saleInfo.available).toLocaleString()}</InfoValue>
           <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>VSK</div>
         </InfoCard>
         <InfoCard>
-          <InfoLabel>📋 Satılan</InfoLabel>
+          <InfoLabel>📋 Sold</InfoLabel>
           <InfoValue>{parseFloat(saleInfo.sold).toLocaleString()}</InfoValue>
           <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>VSK</div>
         </InfoCard>
         <InfoCard>
-          <InfoLabel>💰 Toplanan ETH</InfoLabel>
+          <InfoLabel>💰 ETH Raised</InfoLabel>
           <InfoValue>{parseFloat(saleInfo.raised).toFixed(4)}</InfoValue>
           <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>ETH</div>
         </InfoCard>
       </InfoGrid>
 
-      {/* Oran Güncelleme */}
+      {/* Update Rate */}
       <FormCard>
-        <FormTitle>🔄 Satış Oranını Güncelle</FormTitle>
+        <FormTitle>🔄 Update Sale Rate</FormTitle>
         <p style={{ color: '#6b7280', marginBottom: '1rem', fontSize: '0.875rem' }}>
-          1 ETH karşılığında kaç VSK verileceğini belirleyin
+          Set how many VSK are given per 1 ETH
         </p>
         <InputGroup>
-          <Label>Yeni Oran (VSK per ETH)</Label>
+          <Label>New Rate (VSK per ETH)</Label>
           <Input
             type="number"
             value={rateForm}
@@ -228,18 +228,18 @@ const VesikaSaleAdmin = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          {loading ? 'Güncelleniyor...' : 'Oranı Güncelle'}
+          {loading ? 'Updating...' : 'Update Rate'}
         </Button>
       </FormCard>
 
-      {/* Envanter Ekleme */}
+      {/* Add Inventory */}
       <FormCard>
-        <FormTitle>📦 Envanter Ekle</FormTitle>
+        <FormTitle>📦 Add Inventory</FormTitle>
         <p style={{ color: '#6b7280', marginBottom: '1rem', fontSize: '0.875rem' }}>
-          Satışa sunulacak VSK miktarını ekleyin. Mevcut envantere eklenir.
+          Add the amount of VSK to offer for sale. It is added to the current inventory.
         </p>
         <InputGroup>
-          <Label>Eklenecek Miktar (VSK)</Label>
+          <Label>Amount to Add (VSK)</Label>
           <Input
             type="number"
             value={inventoryForm}
@@ -254,7 +254,7 @@ const VesikaSaleAdmin = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          {loading ? 'Ekleniyor...' : 'Envanter Ekle'}
+          {loading ? 'Adding...' : 'Add Inventory'}
         </Button>
       </FormCard>
     </SaleSection>

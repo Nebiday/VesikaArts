@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { useWeb3 } from './Web3Context';
 import toast from 'react-hot-toast';
 
-// Contract ABIs (Bu dosyalar deployment sonrası oluşturulacak)
+// Contract ABIs (these files are generated after deployment)
 import VesikaCoinABI from '../abis/VesikaCoin.json';
 import ArtistTokenFactoryABI from '../abis/ArtistTokenFactory.json';
 import TokenSwapABI from '../abis/TokenSwap.json';
@@ -38,13 +38,13 @@ export const ContractProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
-  // Contract adreslerini deployment dosyasından oku
+  // Read contract addresses from the deployment file
   const getContractAddresses = (chainId) => {
     
     // Try to load from deployment file first
     try {
       if (chainId === 31337) {
-        // Localhost - deployment dosyasından oku
+        // Localhost - read from deployment file
         const deploymentData = require('../deployments/localhost.json');
         return {
           vesikaCoin: deploymentData.contracts.VesikaCoin,
@@ -54,7 +54,7 @@ export const ContractProvider = ({ children }) => {
         };
       }
       if (chainId === 11155111) {
-        // Sepolia - deployment dosyasından oku
+        // Sepolia - read from deployment file
         const deploymentData = require('../deployments/sepolia.json');
         return {
           vesikaCoin: deploymentData.contracts.VesikaCoin,
@@ -85,7 +85,7 @@ export const ContractProvider = ({ children }) => {
     return addresses[chainId] || addresses[31337];
   };
 
-  // Contract'ları başlat
+  // Initialize contracts
   const initializeContracts = async () => {
     if (!provider || !chainId) return;
 
@@ -133,9 +133,9 @@ export const ContractProvider = ({ children }) => {
     }
   };
 
-  // VesikaCoin işlemleri
+  // VesikaCoin actions
   const vesikaCoinActions = {
-    // Balance al
+    // Get balance
     getBalance: async (address) => {
       if (!contracts.vesikaCoin) return '0';
       try {
@@ -201,7 +201,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Stake bilgilerini al
+    // Get stake info
     getStakeInfo: async (address) => {
       if (!contracts.vesikaCoin) return null;
       try {
@@ -218,7 +218,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Ödül hesapla
+    // Calculate reward
     calculateReward: async (address) => {
       if (!contracts.vesikaCoin) return '0';
       try {
@@ -230,7 +230,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Ödül talep et
+    // Claim rewards
     claimRewards: async () => {
       if (!contracts.vesikaCoin || !signer) return;
       try {
@@ -247,13 +247,13 @@ export const ContractProvider = ({ children }) => {
     },
   };
 
-  // Factory işlemleri
+  // Factory actions
   const factoryActions = {
-    // Sanatçı kaydı
+    // Artist registration
     registerArtist: async (name, bio, website, socialMedia) => {
       if (!contracts.factory || !signer) return;
       try {
-        // Metadata JSON oluştur
+        // Build metadata JSON
         const metadata = JSON.stringify({
           name,
           bio,
@@ -263,18 +263,18 @@ export const ContractProvider = ({ children }) => {
         });
         
         const tx = await contracts.factory.registerArtist(metadata);
-        toast.success('Sanatçı kaydı başlatıldı...');
+        toast.success('Artist registration initiated...');
         await tx.wait();
-        toast.success('Sanatçı kaydı başarıyla tamamlandı!');
+        toast.success('Artist registration completed successfully!');
         return tx;
       } catch (error) {
         console.error('Error registering artist:', error);
-        toast.error(`Sanatçı kaydı başarısız: ${error.message}`);
+        toast.error(`Artist registration failed: ${error.message}`);
         throw error;
       }
     },
 
-    // Sanatçı bilgilerini al
+    // Get artist info
     getArtistInfo: async (address) => {
       if (!contracts.factory) return null;
       try {
@@ -291,7 +291,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Token talebi
+    // Token request
     requestToken: async (name, symbol, maxSupply, initialSwapRate, description, metadata) => {
       if (!contracts.factory || !signer) return;
       try {
@@ -314,7 +314,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Bekleyen talepleri al
+    // Get pending requests
     getPendingRequests: async () => {
       if (!contracts.factory) return [];
       try {
@@ -326,7 +326,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Talep detaylarını al
+    // Get request details
     getRequestDetails: async (requestId) => {
       if (!contracts.factory) return null;
       try {
@@ -350,11 +350,11 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Sanatçının token taleplerini al
+    // Get the artist's token requests
     getArtistTokenRequests: async (artistAddress) => {
       if (!contracts.factory) return [];
       try {
-        // Tüm talepleri al ve sanatçıya ait olanları filtrele
+        // Get all requests and filter the ones belonging to the artist
         const requestCounter = await contracts.factory.requestCounter();
         const requests = [];
         
@@ -391,7 +391,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Sanatçıyı onayla (admin)
+    // Approve artist (admin)
     approveArtist: async (artistAddress) => {
       if (!contracts.factory || !signer) return;
       try {
@@ -407,7 +407,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Sanatçıyı reddet (admin)
+    // Reject artist (admin)
     rejectArtist: async (artistAddress) => {
       if (!contracts.factory || !signer) return;
       try {
@@ -423,7 +423,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Token talebini onayla (admin)
+    // Approve token request (admin)
     approveTokenRequest: async (requestId) => {
       if (!contracts.factory || !signer) return;
       try {
@@ -439,7 +439,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Token talebini reddet (admin)
+    // Reject token request (admin)
     rejectTokenRequest: async (requestId) => {
       if (!contracts.factory || !signer) {
         console.error('Missing factory contract or signer');
@@ -465,7 +465,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Token deploy et (admin)
+    // Deploy token (admin)
     deployToken: async (requestId) => {
       if (!contracts.factory || !signer) return;
       try {
@@ -481,7 +481,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Admin için bekleyen sanatçıları al
+    // Get pending artists (for admin)
     getPendingArtists: async () => {
       if (!contracts.factory) return [];
       try {
@@ -521,7 +521,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Admin için bekleyen token taleplerini al
+    // Get pending token requests (for admin)
     getPendingTokenRequests: async () => {
       if (!contracts.factory) return [];
       try {
@@ -560,7 +560,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Admin için onaylanmış token taleplerini al
+    // Get approved token requests (for admin)
     getApprovedTokenRequests: async () => {
       if (!contracts.factory) return [];
       try {
@@ -593,7 +593,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Deploy edilmiş tüm tokenları al (tüm onaylanmış sanatçılardan)
+    // Get all deployed tokens (from all approved artists)
     getAllDeployedTokens: async () => {
       if (!contracts.factory) return [];
       try {
@@ -651,9 +651,9 @@ export const ContractProvider = ({ children }) => {
     },
   };
 
-  // Swap işlemleri
+  // Swap actions
   const swapActions = {
-    // Pool bilgilerini al
+    // Get pool info
     getPoolInfo: async (artistTokenAddress) => {
       if (!contracts.tokenSwap) return null;
       try {
@@ -670,7 +670,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Swap oranını hesapla
+    // Calculate swap rate
     getAmountOut: async (amountIn, reserveIn, reserveOut) => {
       if (!contracts.tokenSwap) return '0';
       try {
@@ -686,7 +686,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Ana token -> Sanatçı token swap
+    // Main token -> Artist token swap
     swapMainToArtist: async (artistToken, mainTokenAmount, minArtistTokenOut) => {
       if (!contracts.tokenSwap || !signer) return;
       try {
@@ -706,7 +706,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Sanatçı token -> Ana token swap
+    // Artist token -> Main token swap
     swapArtistToMain: async (artistToken, artistTokenAmount, minMainTokenOut) => {
       if (!contracts.tokenSwap || !signer) return;
       try {
@@ -726,7 +726,7 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Artist token'ı whitelist'e ekle
+    // Add an address to the artist token whitelist
     addToWhitelist: async (tokenAddress, addressToWhitelist) => {
       if (!signer) return;
       try {
@@ -749,12 +749,12 @@ export const ContractProvider = ({ children }) => {
       }
     },
 
-    // Liquidity pool oluştur
+    // Create liquidity pool
     createPool: async (artistToken, mainTokenAmount, artistTokenAmount) => {
       if (!contracts.tokenSwap || !signer) return;
       try {
         
-        // Artist token kontratını bağla
+        // Connect the artist token contract
         const artistTokenContract = new ethers.Contract(
           artistToken,
           [
@@ -765,7 +765,7 @@ export const ContractProvider = ({ children }) => {
           signer
         );
         
-        // TokenSwap'in whitelist durumunu kontrol et
+        // Check TokenSwap's whitelist status
         const isWhitelisted = await artistTokenContract.whitelist(contracts.tokenSwap.address);
         
         if (!isWhitelisted) {
@@ -776,20 +776,20 @@ export const ContractProvider = ({ children }) => {
         } else {
         }
         
-        // Allowance kontrol et ve ver
+        // Check and grant allowance
         const mainTokenContract = contracts.vesikaCoin;
         
         const mainAmount = ethers.utils.parseEther(mainTokenAmount);
         const artistAmount = ethers.utils.parseEther(artistTokenAmount);
         
-        // Allowance ver
+        // Grant allowance
         const mainApproval = await mainTokenContract.approve(contracts.tokenSwap.address, mainAmount);
         await mainApproval.wait();
         
         const artistApproval = await artistTokenContract.approve(contracts.tokenSwap.address, artistAmount);
         await artistApproval.wait();
         
-        // Pool oluştur
+        // Create pool
         const tx = await contracts.tokenSwap.createPool(
           artistToken,
           mainAmount,

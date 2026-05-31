@@ -126,7 +126,7 @@ const Artists = () => {
   // Safe timestamp formatting
   const formatTimestamp = (timestamp) => {
     try {
-      if (!timestamp || timestamp === 0) return 'Bilinmiyor';
+      if (!timestamp || timestamp === 0) return 'Unknown';
       
       let ts = timestamp;
       if (typeof timestamp === 'object' && timestamp.toString) {
@@ -143,12 +143,12 @@ const Artists = () => {
       }
       
       if (isNaN(date.getTime())) {
-        return 'Geçersiz Tarih';
+        return 'Invalid Date';
       }
       
-      return date.toLocaleDateString('tr-TR');
+      return date.toLocaleDateString('en-US');
     } catch (error) {
-      return 'Tarih Hatası';
+      return 'Date Error';
     }
   };
 
@@ -215,8 +215,8 @@ const Artists = () => {
     return (
       <ArtistsContainer>
         <Container>
-          <Title>Onaylanmış Sanatçılar</Title>
-          <LoadingMessage>Sanatçılar yükleniyor...</LoadingMessage>
+          <Title>Approved Artists</Title>
+          <LoadingMessage>Loading artists...</LoadingMessage>
         </Container>
       </ArtistsContainer>
     );
@@ -225,7 +225,7 @@ const Artists = () => {
   return (
     <ArtistsContainer>
       <Container>
-        <Title>Onaylanmış Sanatçılar</Title>
+        <Title>Approved Artists</Title>
         
         {approvedArtists.length > 0 ? (
           <Grid>
@@ -238,12 +238,12 @@ const Artists = () => {
               >
                 <ArtistHeader>
                   <ArtistName>{artist.name}</ArtistName>
-                  <StatusBadge>Onaylandı</StatusBadge>
+                  <StatusBadge>Approved</StatusBadge>
                 </ArtistHeader>
 
                 <ArtistInfo>
                   <InfoItem>
-                    <InfoLabel>Adres</InfoLabel>
+                    <InfoLabel>Address</InfoLabel>
                     <InfoValue style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
                       {artist.address}
                     </InfoValue>
@@ -269,7 +269,7 @@ const Artists = () => {
                   
                   {artist.socialMedia && Object.keys(artist.socialMedia).length > 0 && (
                     <InfoItem>
-                      <InfoLabel>Sosyal Medya</InfoLabel>
+                      <InfoLabel>Social Media</InfoLabel>
                       <InfoValue>
                         {Object.entries(artist.socialMedia).map(([platform, url]) => (
                           <div key={platform}>
@@ -285,7 +285,7 @@ const Artists = () => {
                   
                   {artist.timestamp > 0 && (
                     <InfoItem>
-                      <InfoLabel>Onaylanma Tarihi</InfoLabel>
+                      <InfoLabel>Approval Date</InfoLabel>
                       <InfoValue>
                         {formatTimestamp(artist.timestamp)}
                       </InfoValue>
@@ -294,15 +294,15 @@ const Artists = () => {
                 </ArtistInfo>
 
                 <TokenCount>
-                  🪙 {artist.tokenCount} Token Oluşturdu
+                  🪙 Created {artist.tokenCount} Token(s)
                 </TokenCount>
               </ArtistCard>
             ))}
           </Grid>
         ) : (
           <EmptyMessage>
-            <h3>Henüz Onaylanmış Sanatçı Yok</h3>
-            <p>Platform henüz hiç sanatçı onaylamadı. İlk sanatçı olmak için kayıt olun!</p>
+            <h3>No Approved Artists Yet</h3>
+            <p>The platform hasn't approved any artists yet. Register to become the first artist!</p>
           </EmptyMessage>
         )}
       </Container>

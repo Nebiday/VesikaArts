@@ -257,17 +257,17 @@ const Swap = () => {
 
   const handleSwap = async () => {
     if (!fromAmount || parseFloat(fromAmount) <= 0) {
-      toast.error('Geçerli bir miktar girin');
+      toast.error('Enter a valid amount');
       return;
     }
 
     if (fromToken === toToken) {
-      toast.error('Aynı token seçilemez');
+      toast.error('Cannot select the same token');
       return;
     }
 
     if (!contracts.tokenSwap) {
-      toast.error('Swap contract bulunamadı');
+      toast.error('Swap contract not found');
       return;
     }
 
@@ -288,7 +288,7 @@ const Swap = () => {
       
       
       if (!fromTokenData || !toTokenData) {
-        toast.error('Token bilgileri bulunamadı');
+        toast.error('Token information not found');
         return;
       }
 
@@ -331,7 +331,7 @@ const Swap = () => {
       }
       // Artist Token -> Artist Token (through VSK)
       else {
-        toast.error('Artist token arası direkt swap henüz desteklenmiyor');
+        toast.error('Direct swaps between artist tokens are not supported yet');
         return;
       }
       
@@ -346,7 +346,7 @@ const Swap = () => {
       
     } catch (error) {
       console.error('🔴 Swap error:', error);
-      toast.error('Swap işlemi başarısız: ' + (error.message || 'Bilinmeyen hata'));
+      toast.error('Swap failed: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -464,8 +464,8 @@ const Swap = () => {
           <Title>Token Swap</Title>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <h3>Cüzdanınızı bağlayın</h3>
-              <p>Swap yapmak için önce cüzdanınızı bağlamanız gerekiyor.</p>
+              <h3>Connect your wallet</h3>
+              <p>You need to connect your wallet first to swap.</p>
             </div>
           </Card>
         </Container>
@@ -487,8 +487,8 @@ const Swap = () => {
             {/* From Token */}
             <TokenSelector>
               <TokenHeader>
-                <TokenLabel>Gönder</TokenLabel>
-                <Balance>Bakiye: {tokenBalances[fromToken] ? parseFloat(tokenBalances[fromToken]).toFixed(4) : '0.0000'}</Balance>
+                <TokenLabel>From</TokenLabel>
+                <Balance>Balance: {tokenBalances[fromToken] ? parseFloat(tokenBalances[fromToken]).toFixed(4) : '0.0000'}</Balance>
               </TokenHeader>
               <TokenInput>
                 <AmountInput
@@ -504,7 +504,7 @@ const Swap = () => {
                   disabled={tokensLoading}
                 >
                   {tokensLoading ? (
-                    <option>Yükleniyor...</option>
+                    <option>Loading...</option>
                   ) : (
                     availableTokens.map(token => (
                       <option key={token.symbol} value={token.symbol}>
@@ -526,8 +526,8 @@ const Swap = () => {
             {/* To Token */}
             <TokenSelector>
               <TokenHeader>
-                <TokenLabel>Al</TokenLabel>
-                <Balance>Bakiye: {tokenBalances[toToken] ? parseFloat(tokenBalances[toToken]).toFixed(4) : '0.0000'}</Balance>
+                <TokenLabel>To</TokenLabel>
+                <Balance>Balance: {tokenBalances[toToken] ? parseFloat(tokenBalances[toToken]).toFixed(4) : '0.0000'}</Balance>
               </TokenHeader>
               <TokenInput>
                 <AmountInput
@@ -542,7 +542,7 @@ const Swap = () => {
                   disabled={tokensLoading}
                 >
                   {tokensLoading ? (
-                    <option>Yükleniyor...</option>
+                    <option>Loading...</option>
                   ) : (
                     availableTokens.map(token => (
                       <option key={token.symbol} value={token.symbol}>
@@ -560,7 +560,7 @@ const Swap = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {loading ? 'Swap Yapılıyor...' : 'Swap Yap'}
+              {loading ? 'Swapping...' : 'Swap'}
             </SwapButton>
           </SwapInterface>
         </Card>

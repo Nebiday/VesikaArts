@@ -20,13 +20,13 @@ export const Web3Provider = ({ children }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [balance, setBalance] = useState('0');
 
-  // MetaMask bağlantısını kontrol et
+  // Check MetaMask connection
   const checkConnection = async () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         
-        // Önce hesap erişimi iste
+        // Request account access first
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         
         if (accounts.length > 0) {
@@ -47,7 +47,7 @@ export const Web3Provider = ({ children }) => {
     }
   };
 
-  // Cüzdan bağlantısı
+  // Connect wallet
   const connectWallet = async () => {
     if (typeof window.ethereum === 'undefined') {
       toast.error('MetaMask is not installed!');
@@ -80,7 +80,7 @@ export const Web3Provider = ({ children }) => {
     }
   };
 
-  // Cüzdan bağlantısını kes
+  // Disconnect wallet
   const disconnectWallet = () => {
     setAccount(null);
     setProvider(null);
@@ -90,7 +90,7 @@ export const Web3Provider = ({ children }) => {
     toast.success('Wallet disconnected');
   };
 
-  // Ağ değiştir
+  // Switch network
   const switchNetwork = async (targetChainId) => {
     if (!window.ethereum) return;
 
@@ -100,7 +100,7 @@ export const Web3Provider = ({ children }) => {
         params: [{ chainId: ethers.utils.hexValue(targetChainId) }],
       });
     } catch (error) {
-      // Ağ mevcut değilse ekle
+      // Add the network if it does not exist
       if (error.code === 4902) {
         try {
           await window.ethereum.request({
@@ -118,7 +118,7 @@ export const Web3Provider = ({ children }) => {
     }
   };
 
-  // Ağ konfigürasyonu
+  // Network configuration
   const getNetworkConfig = (chainId) => {
     const configs = {
       1: {
@@ -146,7 +146,7 @@ export const Web3Provider = ({ children }) => {
     return configs[chainId];
   };
 
-  // Ağ adını al
+  // Get network name
   const getNetworkName = (chainId) => {
     const names = {
       1: 'Ethereum Mainnet',
@@ -156,7 +156,7 @@ export const Web3Provider = ({ children }) => {
     return names[chainId] || `Chain ${chainId}`;
   };
 
-  // Hesap değişikliklerini dinle
+  // Listen for account changes
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
@@ -172,7 +172,7 @@ export const Web3Provider = ({ children }) => {
         window.location.reload();
       });
 
-      // Sayfa yüklendiğinde bağlantıyı kontrol et
+      // Check connection on page load
       checkConnection();
     }
 
@@ -184,7 +184,7 @@ export const Web3Provider = ({ children }) => {
     };
   }, []);
 
-  // Balance'ı güncelle
+  // Update balance
   const updateBalance = async () => {
     if (provider && account) {
       try {

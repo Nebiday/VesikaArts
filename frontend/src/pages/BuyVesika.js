@@ -241,12 +241,12 @@ const BuyVesika = () => {
 
   const handleBuy = async () => {
     if (!ethAmount || ethAmount === '0') {
-      toast.error('Lütfen miktar girin');
+      toast.error('Please enter an amount');
       return;
     }
 
     if (!contracts.vesikaSale) {
-      toast.error('VesikaSale kontratı yüklenmedi');
+      toast.error('VesikaSale contract not loaded');
       return;
     }
 
@@ -255,9 +255,9 @@ const BuyVesika = () => {
       const ethWei = ethers.utils.parseEther(ethAmount);
       const tx = await contracts.vesikaSale.buyVesika({ value: ethWei });
       
-      toast.success('İşlem gönderildi...');
+      toast.success('Transaction submitted...');
       await tx.wait();
-      toast.success(`${vskAmount} VSK başarıyla satın alındı!`);
+      toast.success(`${vskAmount} VSK purchased successfully!`);
       
       setEthAmount('');
       setVskAmount('0');
@@ -265,7 +265,7 @@ const BuyVesika = () => {
       await loadUserBalance();
     } catch (error) {
       console.error('Error buying VSK:', error);
-      toast.error('Satın alma başarısız: ' + (error.message || 'Bilinmeyen hata'));
+      toast.error('Purchase failed: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -275,11 +275,11 @@ const BuyVesika = () => {
     return (
       <BuyContainer>
         <Container>
-          <Title>💎 VesikaCoin Satın Al</Title>
+          <Title>💎 Buy VesikaCoin</Title>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <h3>Cüzdanınızı bağlayın</h3>
-              <p>VesikaCoin satın almak için önce cüzdanınızı bağlamanız gerekiyor.</p>
+              <h3>Connect your wallet</h3>
+              <p>You need to connect your wallet first to buy VesikaCoin.</p>
             </div>
           </Card>
         </Container>
@@ -290,45 +290,45 @@ const BuyVesika = () => {
   return (
     <BuyContainer>
       <Container>
-        <Title>💎 VesikaCoin Satın Al</Title>
-        <Subtitle>ETH ile VesikaCoin satın alın ve platformda kullanın!</Subtitle>
+        <Title>💎 Buy VesikaCoin</Title>
+        <Subtitle>Buy VesikaCoin with ETH and use it on the platform!</Subtitle>
 
-        {/* Satın Alma Kartı */}
+        {/* Purchase Card */}
         <Card
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 style={{ marginBottom: '1.5rem', color: '#1f2937' }}>💰 Satın Alma</h2>
+          <h2 style={{ marginBottom: '1.5rem', color: '#1f2937' }}>💰 Purchase</h2>
 
           {saleInfo && (
             <InfoGrid>
               <InfoCard>
-                <InfoLabel>Oran</InfoLabel>
+                <InfoLabel>Rate</InfoLabel>
                 <InfoValue>{saleInfo.rate} VSK</InfoValue>
                 <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>per ETH</div>
               </InfoCard>
               <InfoCard>
-                <InfoLabel>Min Alım</InfoLabel>
+                <InfoLabel>Min Buy</InfoLabel>
                 <InfoValue>{saleInfo.minBuy} ETH</InfoValue>
               </InfoCard>
               <InfoCard>
-                <InfoLabel>Max Alım</InfoLabel>
+                <InfoLabel>Max Buy</InfoLabel>
                 <InfoValue>{saleInfo.maxBuy} ETH</InfoValue>
               </InfoCard>
               <InfoCard>
-                <InfoLabel>VSK Bakiyeniz</InfoLabel>
+                <InfoLabel>Your VSK Balance</InfoLabel>
                 <InfoValue>{parseFloat(userBalance).toFixed(2)}</InfoValue>
               </InfoCard>
               <InfoCard>
-                <InfoLabel>📦 Satışta Kalan</InfoLabel>
+                <InfoLabel>📦 Remaining for Sale</InfoLabel>
                 <InfoValue>{parseFloat(saleInfo.available).toLocaleString()}</InfoValue>
               </InfoCard>
             </InfoGrid>
           )}
 
           <InputGroup>
-            <Label>ETH Miktarı</Label>
+            <Label>ETH Amount</Label>
             <Input
               type="number"
               value={ethAmount}
@@ -340,7 +340,7 @@ const BuyVesika = () => {
           </InputGroup>
 
           <OutputBox>
-            <OutputLabel>Alacağınız VSK</OutputLabel>
+            <OutputLabel>VSK You'll Receive</OutputLabel>
             <OutputValue>{parseFloat(vskAmount).toLocaleString()} VSK</OutputValue>
           </OutputBox>
 
@@ -350,28 +350,28 @@ const BuyVesika = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {loading ? 'İşlem Yapılıyor...' : '🚀 Satın Al'}
+            {loading ? 'Processing...' : '🚀 Buy'}
           </Button>
         </Card>
 
-        {/* İstatistikler */}
+        {/* Statistics */}
         {saleInfo && (
           <StatsCard
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <StatsTitle>📊 Satış İstatistikleri</StatsTitle>
+            <StatsTitle>📊 Sale Statistics</StatsTitle>
             <StatRow>
-              <StatLabel>📦 Satışta Kalan VSK</StatLabel>
+              <StatLabel>📦 VSK Remaining for Sale</StatLabel>
               <StatValue>{parseFloat(saleInfo.available).toLocaleString()} VSK</StatValue>
             </StatRow>
             <StatRow>
-              <StatLabel>📋 Toplam Satılan VSK</StatLabel>
+              <StatLabel>📋 Total VSK Sold</StatLabel>
               <StatValue>{parseFloat(saleInfo.sold).toLocaleString()} VSK</StatValue>
             </StatRow>
             <StatRow>
-              <StatLabel>💰 Toplam ETH</StatLabel>
+              <StatLabel>💰 Total ETH</StatLabel>
               <StatValue>{parseFloat(saleInfo.raised).toFixed(4)} ETH</StatValue>
             </StatRow>
           </StatsCard>

@@ -147,9 +147,9 @@ const Navbar = () => {
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/buy', label: '💰 VSK Satın Al' },
-    { path: '/artists', label: 'Sanatçılar' },
-    { path: '/tokens', label: 'Tokenlar' },
+    { path: '/buy', label: '💰 Buy VSK' },
+    { path: '/artists', label: 'Artists' },
+    { path: '/tokens', label: 'Tokens' },
     { path: '/staking', label: 'Staking' },
     { path: '/swap', label: 'Swap' },
     { path: '/artist', label: 'Artist' },

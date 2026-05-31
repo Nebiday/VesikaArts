@@ -257,32 +257,32 @@ const Home = () => {
     {
       icon: '🎨',
       title: 'Artist Tokens',
-      description: 'Sanatçılar kendi ERC20 token\'larını oluşturabilir ve hayranlarıyla doğrudan etkileşime geçebilir.',
+      description: 'Artists can create their own ERC20 tokens and interact directly with their fans.',
     },
     {
       icon: '🏛️',
-      title: 'DAO Yönetişimi',
-      description: 'VesikaCoin sahipleri platform kararlarında oy kullanabilir ve gelecek yönünü belirleyebilir.',
+      title: 'DAO Governance',
+      description: 'VesikaCoin holders can vote on platform decisions and shape its future direction.',
     },
     {
       icon: '💎',
-      title: 'Staking Ödülleri',
-      description: 'Token\'larınızı stake ederek %5-15 arası yıllık getiri elde edin ve oy gücünüzü artırın.',
+      title: 'Staking Rewards',
+      description: 'Stake your tokens to earn 5-15% annual yield and increase your voting power.',
     },
     {
       icon: '🔄',
       title: 'Token Swap',
-      description: 'Ana token ile sanatçı token\'ları arasında güvenli ve düşük maliyetli takas yapın.',
+      description: 'Swap securely and at low cost between the main token and artist tokens.',
     },
     {
       icon: '🛡️',
-      title: 'Güvenli Sistem',
-      description: 'OpenZeppelin standartları ile geliştirilmiş, denetlenmiş akıllı kontratlar.',
+      title: 'Secure System',
+      description: 'Smart contracts built and audited using OpenZeppelin standards.',
     },
     {
       icon: '🌐',
-      title: 'Merkeziyetsiz',
-      description: 'Blokzincir teknolojisi ile tamamen merkeziyetsiz ve şeffaf işlemler.',
+      title: 'Decentralized',
+      description: 'Fully decentralized and transparent transactions powered by blockchain technology.',
     },
   ];
 
@@ -294,7 +294,7 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          VesikaArt Ekosistemi
+          VesikaArt Ecosystem
         </HeroTitle>
         
         <HeroSubtitle
@@ -302,8 +302,8 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Sanatçılar ve hayranlar için merkeziyetsiz token ekosistemi. 
-          Kendi token'ınızı oluşturun, stake edin ve DAO'ya katılın.
+          A decentralized token ecosystem for artists and fans.
+          Create your own token, stake it, and join the DAO.
         </HeroSubtitle>
 
         <CTAButtons
@@ -313,13 +313,13 @@ const Home = () => {
         >
           {isConnected ? (
             <>
-              <CTAButton to="/staking">Staking Başla</CTAButton>
-              <CTAButton to="/artist" className="secondary">Sanatçı Ol</CTAButton>
+              <CTAButton to="/staking">Start Staking</CTAButton>
+              <CTAButton to="/artist" className="secondary">Become an Artist</CTAButton>
             </>
           ) : (
             <>
-              <CTAButton to="/staking">Cüzdanını Bağla</CTAButton>
-              <CTAButton to="/artist" className="secondary">Daha Fazla Bilgi</CTAButton>
+              <CTAButton to="/staking">Connect Wallet</CTAButton>
+              <CTAButton to="/artist" className="secondary">Learn More</CTAButton>
             </>
           )}
         </CTAButtons>
@@ -332,7 +332,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.6 }}
             >
               <StatNumber>{stats.totalSupply}</StatNumber>
-              <StatLabel>Toplam VSK Arzı</StatLabel>
+              <StatLabel>Total VSK Supply</StatLabel>
             </StatCard>
             
             <StatCard
@@ -341,7 +341,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.7 }}
             >
               <StatNumber>{stats.totalStaked}</StatNumber>
-              <StatLabel>Stake Edilen VSK</StatLabel>
+              <StatLabel>Staked VSK</StatLabel>
             </StatCard>
             
             <StatCard
@@ -350,7 +350,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.8 }}
             >
               <StatNumber>{stats.deployedTokens}</StatNumber>
-              <StatLabel>Sanatçı Token'ı</StatLabel>
+              <StatLabel>Artist Tokens</StatLabel>
             </StatCard>
             
             <StatCard
@@ -359,14 +359,14 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.9 }}
             >
               <StatNumber>{stats.activeArtists}</StatNumber>
-              <StatLabel>Aktif Sanatçı</StatLabel>
+              <StatLabel>Active Artists</StatLabel>
             </StatCard>
           </StatsGrid>
         </StatsSection>
       </HeroSection>
 
       <FeaturesSection>
-        <SectionTitle>Platform Özellikleri</SectionTitle>
+        <SectionTitle>Platform Features</SectionTitle>
         <FeaturesGrid>
           {features.map((feature, index) => (
             <FeatureCard

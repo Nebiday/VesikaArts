@@ -327,7 +327,7 @@ const Admin = () => {
   // Safe timestamp formatting
   const formatTimestamp = (timestamp) => {
     try {
-      if (!timestamp || timestamp === 0) return 'Bilinmiyor';
+      if (!timestamp || timestamp === 0) return 'Unknown';
       
       // Convert BigNumber to number if needed
       let ts = timestamp;
@@ -350,17 +350,17 @@ const Admin = () => {
       
       
       if (isNaN(date.getTime())) {
-        return 'Geçersiz Tarih';
+        return 'Invalid Date';
       }
       
-      return date.toLocaleDateString('tr-TR');
+      return date.toLocaleDateString('en-US');
     } catch (error) {
       console.error('🔴 Error formatting timestamp:', error);
-      return 'Tarih Hatası';
+      return 'Date Error';
     }
   };
 
-  // Admin yetkisi kontrolü
+  // Admin role check
   useEffect(() => {
     const checkAdminRole = async () => {
       
@@ -386,7 +386,7 @@ const Admin = () => {
     checkAdminRole();
   }, [contracts.factory, account]);
 
-  // Admin verilerini yükle
+  // Load admin data
   const loadAdminData = async () => {
     if (!contracts.factory || !factoryActions) return;
 
@@ -419,7 +419,7 @@ const Admin = () => {
 
     } catch (error) {
       console.error('Error loading admin data:', error);
-      console.error('Yönetici verileri yüklenirken hata oluştu');
+      console.error('An error occurred while loading admin data');
     } finally {
       setLoading(false);
     }
@@ -432,7 +432,7 @@ const Admin = () => {
       loadAdminData();
     } catch (error) {
       console.error('Error approving artist:', error);
-      console.error('Sanatçı onaylanırken hata oluştu');
+      console.error('An error occurred while approving the artist');
     } finally {
       setLoading(false);
     }
@@ -445,7 +445,7 @@ const Admin = () => {
       loadAdminData();
     } catch (error) {
       console.error('Error rejecting artist:', error);
-      console.error('Sanatçı reddedilirken hata oluştu');
+      console.error('An error occurred while rejecting the artist');
     } finally {
       setLoading(false);
     }
@@ -455,27 +455,27 @@ const Admin = () => {
     try {
       setLoading(true);
       
-      // Token'ı onayla
+      // Approve the token
       await factoryActions.approveTokenRequest(tokenId);
       
-      // Token bilgilerini al
+      // Get token info
       const tokenInfo = pendingTokens.find(t => t.id === tokenId);
       if (tokenInfo && contracts.tokenSwap) {
         try {
-          // Artist'e LIQUIDITY_MANAGER_ROLE ver
+          // Grant LIQUIDITY_MANAGER_ROLE to the artist
           const role = await contracts.tokenSwap.LIQUIDITY_MANAGER_ROLE();
           const tx = await contracts.tokenSwap.grantRole(role, tokenInfo.artist);
           await tx.wait();
         } catch (roleError) {
-          console.error('⚠️ Yetki verilemedi:', roleError);
-          // Yetki verilemese de token onayı başarılı
+          console.error('⚠️ Could not grant role:', roleError);
+          // Token approval succeeds even if role grant fails
         }
       }
       
       loadAdminData();
     } catch (error) {
       console.error('Error approving token:', error);
-      console.error('Token onaylanırken hata oluştu');
+      console.error('An error occurred while approving the token');
     } finally {
       setLoading(false);
     }
@@ -488,7 +488,7 @@ const Admin = () => {
       loadAdminData();
     } catch (error) {
       console.error('Error rejecting token:', error);
-      console.error('Token reddedilirken hata oluştu');
+      console.error('An error occurred while rejecting the token');
     } finally {
       setLoading(false);
     }
@@ -501,7 +501,7 @@ const Admin = () => {
       loadAdminData();
     } catch (error) {
       console.error('Error deploying token:', error);
-      console.error('Token deploy edilirken hata oluştu');
+      console.error('An error occurred while deploying the token');
     } finally {
       setLoading(false);
     }
@@ -510,7 +510,7 @@ const Admin = () => {
   const handleCreatePool = async (tokenAddress) => {
     try {
       setLoading(true);
-      // Başlangıç likidite miktarları (örnek: 1000 VSK ve 10000 Artist Token)
+      // Initial liquidity amounts (e.g. 1000 VSK and 10000 Artist Token)
       const mainTokenAmount = '1000';
       const artistTokenAmount = '10000';
       
@@ -518,7 +518,7 @@ const Admin = () => {
       loadAdminData();
     } catch (error) {
       console.error('Error creating pool:', error);
-      console.error('Pool oluşturulurken hata oluştu');
+      console.error('An error occurred while creating the pool');
     } finally {
       setLoading(false);
     }
@@ -533,8 +533,8 @@ const Admin = () => {
           transition={{ duration: 0.6 }}
         >
           <EmptyState>
-            <h3>⚠️ Cüzdan Bağlantısı Gerekli</h3>
-            <p>Admin paneline erişmek için lütfen cüzdanınızı bağlayın.</p>
+            <h3>⚠️ Wallet Connection Required</h3>
+            <p>Please connect your wallet to access the admin panel.</p>
           </EmptyState>
         </AdminCard>
       </AdminContainer>
@@ -550,8 +550,8 @@ const Admin = () => {
           transition={{ duration: 0.6 }}
         >
           <EmptyState>
-            <h3>⚠️ Erişim Reddedildi</h3>
-            <p>Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+            <h3>⚠️ Access Denied</h3>
+            <p>You do not have permission to access this page.</p>
           </EmptyState>
         </AdminCard>
       </AdminContainer>
@@ -566,8 +566,8 @@ const Admin = () => {
         transition={{ duration: 0.6 }}
       >
         <Header>
-          <h1>🎨 Admin Paneli</h1>
-          <p>Sanatçı ve token taleplerini yönetin</p>
+          <h1>🎨 Admin Panel</h1>
+          <p>Manage artist and token requests</p>
         </Header>
 
         <StatsGrid>
@@ -576,28 +576,28 @@ const Admin = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.totalArtists}</h3>
-            <p>Toplam Sanatçı</p>
+            <p>Total Artists</p>
           </StatCard>
           <StatCard
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.pendingArtists}</h3>
-            <p>Bekleyen Sanatçı</p>
+            <p>Pending Artists</p>
           </StatCard>
           <StatCard
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.totalTokens}</h3>
-            <p>Toplam Token</p>
+            <p>Total Tokens</p>
           </StatCard>
           <StatCard
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3>{stats.pendingTokens}</h3>
-            <p>Bekleyen Token</p>
+            <p>Pending Tokens</p>
           </StatCard>
         </StatsGrid>
 
@@ -607,31 +607,31 @@ const Admin = () => {
               active={activeTab === 'artists'}
               onClick={() => setActiveTab('artists')}
             >
-              👨‍🎨 Sanatçı Talepleri
+              👨‍🎨 Artist Requests
             </TabButton>
             <TabButton
               active={activeTab === 'tokens'}
               onClick={() => setActiveTab('tokens')}
             >
-              🪙 Token Talepleri
+              🪙 Token Requests
             </TabButton>
             <TabButton
               active={activeTab === 'approved-tokens'}
               onClick={() => setActiveTab('approved-tokens')}
             >
-              ✅ Onaylanmış Tokenlar
+              ✅ Approved Tokens
             </TabButton>
             <TabButton
               active={activeTab === 'deployed-tokens'}
               onClick={() => setActiveTab('deployed-tokens')}
             >
-              🚀 Deploy Edilmiş Tokenlar
+              🚀 Deployed Tokens
             </TabButton>
             <TabButton
               active={activeTab === 'sale-management'}
               onClick={() => setActiveTab('sale-management')}
             >
-              💰 VSK Satış Yönetimi
+              💰 VSK Sale Management
             </TabButton>
           </TabButtons>
 
@@ -653,15 +653,15 @@ const Admin = () => {
                         whileHover={{ scale: 1.02 }}
                       >
                         <RequestHeader>
-                          <h3>👨‍🎨 Sanatçı Başvurusu</h3>
-                          <StatusBadge status="pending">⏳ Bekliyor</StatusBadge>
+                          <h3>👨‍🎨 Artist Application</h3>
+                          <StatusBadge status="pending">⏳ Pending</StatusBadge>
                         </RequestHeader>
                         <RequestDetails>
                           <DetailRow>
-                            <strong>Adres:</strong> {artist.address}
+                            <strong>Address:</strong> {artist.address}
                           </DetailRow>
                           <DetailRow>
-                            <strong>Profil:</strong> {artist.profileMetadata || 'Bilgi yok'}
+                            <strong>Profile:</strong> {artist.profileMetadata || 'No info'}
                           </DetailRow>
                         </RequestDetails>
                         <ButtonGroup>
@@ -670,14 +670,14 @@ const Admin = () => {
                             onClick={() => handleApproveArtist(artist.address)}
                             disabled={loading}
                           >
-                            ✅ Onayla
+                            ✅ Approve
                           </ActionButton>
                           <ActionButton
                             variant="reject"
                             onClick={() => handleRejectArtist(artist.address)}
                             disabled={loading}
                           >
-                            ❌ Reddet
+                            ❌ Reject
                           </ActionButton>
                         </ButtonGroup>
                       </RequestCard>
@@ -685,8 +685,8 @@ const Admin = () => {
                   </RequestGrid>
                 ) : (
                   <EmptyState>
-                    <h3>🎉 Bekleyen Sanatçı Talebi Yok</h3>
-                    <p>Şu anda onay bekleyen sanatçı başvurusu bulunmamaktadır.</p>
+                    <h3>🎉 No Pending Artist Requests</h3>
+                    <p>There are currently no artist applications awaiting approval.</p>
                   </EmptyState>
                 );
               }
@@ -710,14 +710,14 @@ const Admin = () => {
                         >
                           <RequestHeader>
                             <h3>{token.name} ({token.symbol})</h3>
-                            <span className="status">Beklemede</span>
+                            <span className="status">Pending</span>
                           </RequestHeader>
                           <RequestDetails>
-                            <p><strong>Sanatçı:</strong> <span>{token.artist}</span></p>
+                            <p><strong>Artist:</strong> <span>{token.artist}</span></p>
                             <p><strong>Max Supply:</strong> <span>{token.maxSupply}</span></p>
                             <p><strong>Swap Rate:</strong> <span>{token.initialSwapRate}</span></p>
-                            <p><strong>Açıklama:</strong> <span>{token.description}</span></p>
-                            <p><strong>Başvuru Tarihi:</strong> <span>{formatTimestamp(token.timestamp)}</span></p>
+                            <p><strong>Description:</strong> <span>{token.description}</span></p>
+                            <p><strong>Application Date:</strong> <span>{formatTimestamp(token.timestamp)}</span></p>
                           </RequestDetails>
                           <ButtonGroup>
                             <ActionButton
@@ -725,7 +725,7 @@ const Admin = () => {
                               onClick={() => handleApproveToken(token.id)}
                               disabled={loading}
                             >
-                              ✅ Onayla
+                              ✅ Approve
                             </ActionButton>
                             <ActionButton
                               variant="reject"
@@ -734,7 +734,7 @@ const Admin = () => {
                               }}
                               disabled={loading}
                             >
-                              ❌ Reddet
+                              ❌ Reject
                             </ActionButton>
                           </ButtonGroup>
                         </RequestCard>
@@ -743,8 +743,8 @@ const Admin = () => {
                 </RequestGrid>
                 ) : (
                   <EmptyState>
-                    <h3>🎉 Bekleyen Token Talebi Yok</h3>
-                    <p>Şu anda onay bekleyen token talebi bulunmamaktadır.</p>
+                    <h3>🎉 No Pending Token Requests</h3>
+                    <p>There are currently no token requests awaiting approval.</p>
                   </EmptyState>
                 );
               }
@@ -763,18 +763,18 @@ const Admin = () => {
                       <RequestHeader>
                         <h3>{token.name} ({token.symbol})</h3>
                         <span className="status" style={{ backgroundColor: token.deployed ? '#10b981' : '#f59e0b' }}>
-                          {token.deployed ? 'Deploy Edildi' : 'Deploy Bekliyor'}
+                          {token.deployed ? 'Deployed' : 'Pending Deployment'}
                         </span>
                       </RequestHeader>
                       <RequestDetails>
-                        <p><strong>Sanatçı:</strong> <span>{token.artist}</span></p>
+                        <p><strong>Artist:</strong> <span>{token.artist}</span></p>
                         <p><strong>Max Supply:</strong> <span>{token.maxSupply}</span></p>
                         <p><strong>Swap Rate:</strong> <span>{token.initialSwapRate}</span></p>
-                        <p><strong>Açıklama:</strong> <span>{token.description}</span></p>
+                        <p><strong>Description:</strong> <span>{token.description}</span></p>
                         {token.tokenAddress && token.tokenAddress !== '0x0000000000000000000000000000000000000000' && (
-                          <p><strong>Token Adresi:</strong> <span>{token.tokenAddress}</span></p>
+                          <p><strong>Token Address:</strong> <span>{token.tokenAddress}</span></p>
                         )}
-                        <p><strong>Onay Tarihi:</strong> <span>{formatTimestamp(token.timestamp)}</span></p>
+                        <p><strong>Approval Date:</strong> <span>{formatTimestamp(token.timestamp)}</span></p>
                       </RequestDetails>
                       <ButtonGroup>
                         {!token.deployed ? (
@@ -783,7 +783,7 @@ const Admin = () => {
                             onClick={() => handleDeployToken(token.id)}
                             disabled={loading}
                           >
-                            🚀 Deploy Et
+                            🚀 Deploy
                           </ActionButton>
                         ) : (
                           <ActionButton
@@ -791,7 +791,7 @@ const Admin = () => {
                             onClick={() => handleCreatePool(token.tokenAddress)}
                             disabled={loading}
                           >
-                            💧 Pool Oluştur
+                            💧 Create Pool
                           </ActionButton>
                         )}
                       </ButtonGroup>
@@ -800,8 +800,8 @@ const Admin = () => {
                 </RequestGrid>
                 ) : (
                   <EmptyState>
-                    <h3>🎉 Onaylanmış Token Yok</h3>
-                    <p>Şu anda onaylanmış token bulunmamaktadır.</p>
+                    <h3>🎉 No Approved Tokens</h3>
+                    <p>There are currently no approved tokens.</p>
                   </EmptyState>
                 );
               }
@@ -813,18 +813,18 @@ const Admin = () => {
                     <RequestCard key={index}>
                       <RequestHeader>
                         <h3>🚀 {token.name} ({token.symbol})</h3>
-                        <StatusBadge status="deployed">🚀 Deploy Edildi</StatusBadge>
+                        <StatusBadge status="deployed">🚀 Deployed</StatusBadge>
                       </RequestHeader>
                       <RequestDetails>
                         <DetailRow>
-                          <strong>Sanatçı:</strong> {token.artist}
+                          <strong>Artist:</strong> {token.artist}
                         </DetailRow>
                         <DetailRow>
-                          <strong>Token Adresi:</strong> 
+                          <strong>Token Address:</strong> 
                           <code style={{fontSize: '0.8em', wordBreak: 'break-all'}}>{token.address}</code>
                         </DetailRow>
                         <DetailRow>
-                          <strong>Toplam Arz:</strong> {parseFloat(token.totalSupply).toLocaleString()} {token.symbol}
+                          <strong>Total Supply:</strong> {parseFloat(token.totalSupply).toLocaleString()} {token.symbol}
                         </DetailRow>
                       </RequestDetails>
                       <ButtonGroup>
@@ -832,14 +832,14 @@ const Admin = () => {
                           variant="info"
                           onClick={() => window.open(`https://etherscan.io/token/${token.address}`, '_blank')}
                         >
-                          🔍 Etherscan'de Gör
+                          🔍 View on Etherscan
                         </ActionButton>
                         <ActionButton
                           variant="approve"
                           onClick={() => handleCreatePool(token.address)}
                           disabled={loading}
                         >
-                          💧 Pool Oluştur
+                          💧 Create Pool
                         </ActionButton>
                       </ButtonGroup>
                     </RequestCard>
@@ -847,8 +847,8 @@ const Admin = () => {
                 </RequestGrid>
                 ) : (
                   <EmptyState>
-                    <h3>🚀 Deploy Edilmiş Token Yok</h3>
-                    <p>Şu anda deploy edilmiş token bulunmamaktadır.</p>
+                    <h3>🚀 No Deployed Tokens</h3>
+                    <p>There are currently no deployed tokens.</p>
                   </EmptyState>
                 );
               }
