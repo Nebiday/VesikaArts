@@ -263,12 +263,6 @@ const Artist = () => {
 
     setLoading(true);
     try {
-      console.log('=== TOKEN REQUEST DEBUG ===');
-      console.log('Form data:', tokenForm);
-      console.log('Request parameters:');
-      console.log('  name:', tokenForm.name);
-      console.log('  symbol:', tokenForm.symbol);
-      console.log('  description:', tokenForm.description);
       
       const standardSupply = '1000000';
       const standardSwapRate = '1';
@@ -286,7 +280,6 @@ const Artist = () => {
         })
       );
       
-      console.log('Token request result:', result);
       toast.success('Token talebi başarıyla gönderildi!');
       await loadArtistData();
       setTokenForm({ name: '', symbol: '', description: '' });

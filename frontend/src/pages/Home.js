@@ -172,11 +172,9 @@ const Home = () => {
       try {
         // Check if contracts are loaded
         if (!contracts.vesikaCoin || !contracts.factory) {
-          console.log('Contracts not loaded yet');
           return;
         }
 
-        console.log('Loading stats...');
         
         // Get total supply with error handling
         let totalSupply = '0';
@@ -191,14 +189,11 @@ const Home = () => {
         // Get total staked with error handling
         let totalStaked = '0';
         try {
-          console.log('🔍 Calling totalStaked...');
           const staked = await contracts.vesikaCoin.totalStaked();
-          console.log('📊 totalStaked raw value:', staked?.toString());
           
           // Check if staked is valid and not empty
           if (staked && staked.toString() !== '0x' && staked.toString() !== '') {
             const stakedValue = parseFloat(ethers.utils.formatEther(staked));
-            console.log('💰 Staked value (formatted):', stakedValue);
             
             if (stakedValue === 0) {
               totalStaked = '0';
@@ -209,9 +204,7 @@ const Home = () => {
             } else {
               totalStaked = stakedValue.toFixed(1);
             }
-            console.log('✅ Final totalStaked display:', totalStaked);
           } else {
-            console.log('⚠️ totalStaked is empty or invalid');
             totalStaked = '0';
           }
         } catch (error) {
@@ -239,7 +232,6 @@ const Home = () => {
           activeArtists = 'N/A';
         }
 
-        console.log('Stats loaded:', { totalSupply, totalStaked, deployedTokens, activeArtists });
         
         setStats({
           totalSupply,

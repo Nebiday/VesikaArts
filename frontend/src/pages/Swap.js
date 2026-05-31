@@ -152,7 +152,6 @@ const Swap = () => {
     
     try {
       setTokensLoading(true);
-      console.log('🟡 Loading available tokens for swap...');
       
       // Always include VSK as base token
       const tokens = [{
@@ -192,7 +191,6 @@ const Swap = () => {
               initialSwapRate: details[4], // Keep as BigNumber for calculations
               isBase: false
             });
-            console.log(`🟢 Added token to swap: ${tokenData.symbol}`);
           }
         } catch (e) {
           console.error(`🔴 Error getting request ${i}:`, e);
@@ -200,7 +198,6 @@ const Swap = () => {
       }
       
       setAvailableTokens(tokens);
-      console.log('🟢 Available tokens for swap:', tokens);
       
       // Set default toToken if not set and tokens available
       if (!toToken && tokens.length > 1) {
@@ -253,7 +250,6 @@ const Swap = () => {
       }
       
       setTokenBalances(balances);
-      console.log('🟢 Token balances loaded:', balances);
     } catch (error) {
       console.error('🔴 Error loading balances:', error);
     }
@@ -290,7 +286,6 @@ const Swap = () => {
       const fromTokenData = availableTokens.find(t => t.symbol === fromToken);
       const toTokenData = availableTokens.find(t => t.symbol === toToken);
       
-      console.log('🟡 Token data:', { fromTokenData, toTokenData });
       
       if (!fromTokenData || !toTokenData) {
         toast.error('Token bilgileri bulunamadı');
@@ -299,14 +294,11 @@ const Swap = () => {
 
       // VSK -> Artist Token swap
       if (fromToken === 'VSK' && toToken !== 'VSK') {
-        console.log(`🟡 Swapping ${fromAmount} VSK to ${toToken}`);
         
         // Approve VSK tokens first
-        console.log('🟡 Approving VSK tokens...');
         const amountToApprove = ethers.utils.parseEther(fromAmount);
         const approveTx = await contracts.vesikaCoin.approve(contracts.tokenSwap.address, amountToApprove);
         await approveTx.wait();
-        console.log('✅ VSK tokens approved');
         
         const minOut = (parseFloat(toAmount) * 0.90).toString(); // 10% slippage tolerance
         
@@ -318,10 +310,8 @@ const Swap = () => {
       }
       // Artist Token -> VSK swap  
       else if (fromToken !== 'VSK' && toToken === 'VSK') {
-        console.log(`🟡 Swapping ${fromAmount} ${fromToken} to VSK`);
         
         // Approve Artist tokens first
-        console.log('🟡 Approving Artist tokens...');
         const artistTokenContract = new ethers.Contract(
           fromTokenData.address,
           contracts.vesikaCoin.interface, // Use same interface as it's ERC20
@@ -330,7 +320,6 @@ const Swap = () => {
         const amountToApprove = ethers.utils.parseEther(fromAmount);
         const approveTx = await artistTokenContract.approve(contracts.tokenSwap.address, amountToApprove);
         await approveTx.wait();
-        console.log('✅ Artist tokens approved');
         
         const minOut = (parseFloat(toAmount) * 0.90).toString(); // 10% slippage tolerance
         
@@ -422,7 +411,6 @@ const Swap = () => {
                 poolInfo.artistTokenReserve
               );
               setToAmount(ethers.utils.formatEther(amountOut));
-              console.log(`🟢 VSK->Artist: ${fromAmount} VSK = ${ethers.utils.formatEther(amountOut)} ${toToken}`);
             } else {
               console.warn('Pool not active or has zero reserves');
               setToAmount('0');
@@ -445,7 +433,6 @@ const Swap = () => {
                 poolInfo.mainTokenReserve
               );
               setToAmount(ethers.utils.formatEther(amountOut));
-              console.log(`🟢 Artist->VSK: ${fromAmount} ${fromToken} = ${ethers.utils.formatEther(amountOut)} VSK`);
             } else {
               console.warn('Pool not active or has zero reserves');
               setToAmount('0');

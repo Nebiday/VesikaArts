@@ -40,7 +40,6 @@ export const Web3Provider = ({ children }) => {
           const balance = await provider.getBalance(accounts[0]);
           setBalance(ethers.utils.formatEther(balance));
           
-          console.log('✅ Wallet connected:', accounts[0]);
         }
       } catch (error) {
         console.error('Error checking connection:', error);

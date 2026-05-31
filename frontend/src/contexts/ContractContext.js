@@ -40,7 +40,6 @@ export const ContractProvider = ({ children }) => {
 
   // Contract adreslerini deployment dosyasından oku
   const getContractAddresses = (chainId) => {
-    console.log('Loading contract addresses for chainId:', chainId);
     
     // Try to load from deployment file first
     try {
@@ -448,22 +447,16 @@ export const ContractProvider = ({ children }) => {
       }
       
       try {
-        console.log('🔴 Attempting to reject token request:', requestId);
-        console.log('🔴 Factory contract address:', contracts.factory.address);
-        console.log('🔴 Signer address:', await signer.getAddress());
         
         // First check if the request exists and is valid
         const details = await contracts.factory.getRequestDetails(requestId);
-        console.log('🔴 Token request details:', details);
         
         if (details[0] === '0x0000000000000000000000000000000000000000') {
           throw new Error('Invalid token request ID');
         }
         
         const tx = await contracts.factory.rejectTokenRequest(requestId);
-        console.log('Token request rejection initiated');
         await tx.wait();
-        console.log('Token request rejected');
         return tx;
       } catch (error) {
         console.error('Error rejecting token request:', error);
@@ -490,12 +483,9 @@ export const ContractProvider = ({ children }) => {
 
     // Admin için bekleyen sanatçıları al
     getPendingArtists: async () => {
-      console.log('getPendingArtists called, factory:', !!contracts.factory);
       if (!contracts.factory) return [];
       try {
-        console.log('Calling factory.getPendingArtists()...');
         const pendingArtists = await contracts.factory.getPendingArtists();
-        console.log('Raw pending artists from contract:', pendingArtists);
         const artistsWithInfo = [];
         
         for (const artistAddress of pendingArtists) {
@@ -524,7 +514,6 @@ export const ContractProvider = ({ children }) => {
           }
         }
         
-        console.log('Processed artists with info:', artistsWithInfo);
         return artistsWithInfo;
       } catch (error) {
         console.error('Error getting pending artists:', error);
@@ -545,7 +534,6 @@ export const ContractProvider = ({ children }) => {
           
           // Filter out invalid/empty tokens
           if (details[0] === '0x0000000000000000000000000000000000000000' || !details[1]) {
-            console.log('🟡 Skipping invalid token request:', requestId.toNumber());
             continue;
           }
           
@@ -565,7 +553,6 @@ export const ContractProvider = ({ children }) => {
           });
         }
         
-        console.log('Parsed pending token requests:', requests);
         return requests;
       } catch (error) {
         console.error('Error getting pending token requests:', error);
@@ -599,7 +586,6 @@ export const ContractProvider = ({ children }) => {
           });
         }
         
-        console.log('Parsed approved token requests:', requests);
         return requests;
       } catch (error) {
         console.error('Error getting approved token requests:', error);
@@ -611,13 +597,11 @@ export const ContractProvider = ({ children }) => {
     getAllDeployedTokens: async () => {
       if (!contracts.factory) return [];
       try {
-        console.log('Getting all deployed tokens from all artists...');
         
         const deployedTokens = [];
         
         // Get approved artist count
         const approvedCount = await contracts.factory.getApprovedArtistCount();
-        console.log('Approved artist count:', approvedCount.toString());
         
         // Get all approved artists and their tokens
         for (let i = 0; i < approvedCount.toNumber(); i++) {
@@ -659,7 +643,6 @@ export const ContractProvider = ({ children }) => {
           }
         }
         
-        console.log('All deployed tokens:', deployedTokens);
         return deployedTokens;
       } catch (error) {
         console.error('Error getting all deployed tokens:', error);
@@ -747,7 +730,6 @@ export const ContractProvider = ({ children }) => {
     addToWhitelist: async (tokenAddress, addressToWhitelist) => {
       if (!signer) return;
       try {
-        console.log('🟡 Adding to whitelist:', addressToWhitelist, 'for token:', tokenAddress);
         
         const tokenContract = new ethers.Contract(
           tokenAddress,
@@ -771,7 +753,6 @@ export const ContractProvider = ({ children }) => {
     createPool: async (artistToken, mainTokenAmount, artistTokenAmount) => {
       if (!contracts.tokenSwap || !signer) return;
       try {
-        console.log('🟡 Creating pool for:', artistToken);
         
         // Artist token kontratını bağla
         const artistTokenContract = new ethers.Contract(
@@ -785,17 +766,14 @@ export const ContractProvider = ({ children }) => {
         );
         
         // TokenSwap'in whitelist durumunu kontrol et
-        console.log('🟡 Checking TokenSwap whitelist status...');
         const isWhitelisted = await artistTokenContract.whitelist(contracts.tokenSwap.address);
         
         if (!isWhitelisted) {
-          console.log('🟡 Adding TokenSwap to whitelist...');
           const whitelistTx = await artistTokenContract.updateWhitelist(contracts.tokenSwap.address, true);
           toast.success('Adding TokenSwap to whitelist...');
           await whitelistTx.wait();
           toast.success('TokenSwap whitelisted successfully');
         } else {
-          console.log('✅ TokenSwap already whitelisted');
         }
         
         // Allowance kontrol et ve ver
@@ -805,16 +783,13 @@ export const ContractProvider = ({ children }) => {
         const artistAmount = ethers.utils.parseEther(artistTokenAmount);
         
         // Allowance ver
-        console.log('🟡 Approving main token...');
         const mainApproval = await mainTokenContract.approve(contracts.tokenSwap.address, mainAmount);
         await mainApproval.wait();
         
-        console.log('🟡 Approving artist token...');
         const artistApproval = await artistTokenContract.approve(contracts.tokenSwap.address, artistAmount);
         await artistApproval.wait();
         
         // Pool oluştur
-        console.log('🟡 Creating pool...');
         const tx = await contracts.tokenSwap.createPool(
           artistToken,
           mainAmount,

@@ -327,7 +327,6 @@ const Admin = () => {
   // Safe timestamp formatting
   const formatTimestamp = (timestamp) => {
     try {
-      console.log('🟡 Raw timestamp:', timestamp);
       if (!timestamp || timestamp === 0) return 'Bilinmiyor';
       
       // Convert BigNumber to number if needed
@@ -338,7 +337,6 @@ const Admin = () => {
       
       // Parse as number
       const numTs = parseInt(ts);
-      console.log('🟡 Parsed timestamp:', numTs);
       
       // If timestamp is too large, it might be in nanoseconds or wrong format
       let date;
@@ -350,7 +348,6 @@ const Admin = () => {
         date = new Date(numTs * 1000);
       }
       
-      console.log('🟡 Formatted date:', date);
       
       if (isNaN(date.getTime())) {
         return 'Geçersiz Tarih';
@@ -366,10 +363,8 @@ const Admin = () => {
   // Admin yetkisi kontrolü
   useEffect(() => {
     const checkAdminRole = async () => {
-      console.log('🟡 Admin check:', { factory: !!contracts.factory, account });
       
       if (!contracts.factory || !account) {
-        console.log('Admin check: Missing factory or account', { factory: !!contracts.factory, account });
         return;
       }
 
@@ -378,7 +373,6 @@ const Admin = () => {
           await contracts.factory.ADMIN_ROLE(),
           account
         );
-        console.log('🟢 Admin role check:', { account, hasRole });
         setIsAdmin(hasRole);
         
         if (hasRole) {
@@ -398,7 +392,6 @@ const Admin = () => {
 
     try {
       setLoading(true);
-      console.log('🟢 Loading admin data...');
 
       const artists = await factoryActions.getPendingArtists();
       const tokens = await factoryActions.getPendingTokenRequests();
@@ -417,10 +410,6 @@ const Admin = () => {
       setPendingTokens(tokens);
       setApprovedTokens(approvedTokensList);
       setDeployedTokens(deployedTokensList);
-      console.log('🟢 Loaded pending artists:', artists);
-      console.log('🟢 Loaded pending tokens:', tokens);
-      console.log('🟢 Loaded approved tokens:', approvedTokensList);
-      console.log('🟢 Loaded deployed tokens:', deployedTokensList);
       setStats({
         totalArtists: parseInt(approvedArtistCount) + artists.length,
         pendingArtists: artists.length,
@@ -428,7 +417,6 @@ const Admin = () => {
         pendingTokens: tokens.length
       });
 
-      console.log('🟢 Admin data loaded:', { artists: artists.length, tokens: tokens.length });
     } catch (error) {
       console.error('Error loading admin data:', error);
       console.error('Yönetici verileri yüklenirken hata oluştu');
@@ -441,7 +429,6 @@ const Admin = () => {
     try {
       setLoading(true);
       await factoryActions.approveArtist(artistAddress);
-      console.log('Sanatçı onaylandı!');
       loadAdminData();
     } catch (error) {
       console.error('Error approving artist:', error);
@@ -455,7 +442,6 @@ const Admin = () => {
     try {
       setLoading(true);
       await factoryActions.rejectArtist(artistAddress);
-      console.log('Sanatçı reddedildi!');
       loadAdminData();
     } catch (error) {
       console.error('Error rejecting artist:', error);
@@ -471,7 +457,6 @@ const Admin = () => {
       
       // Token'ı onayla
       await factoryActions.approveTokenRequest(tokenId);
-      console.log('✅ Token talebi onaylandı!');
       
       // Token bilgilerini al
       const tokenInfo = pendingTokens.find(t => t.id === tokenId);
@@ -481,7 +466,6 @@ const Admin = () => {
           const role = await contracts.tokenSwap.LIQUIDITY_MANAGER_ROLE();
           const tx = await contracts.tokenSwap.grantRole(role, tokenInfo.artist);
           await tx.wait();
-          console.log('✅ Artist\'e LIQUIDITY_MANAGER_ROLE verildi!');
         } catch (roleError) {
           console.error('⚠️ Yetki verilemedi:', roleError);
           // Yetki verilemese de token onayı başarılı
@@ -498,11 +482,9 @@ const Admin = () => {
   };
 
   const handleRejectToken = async (tokenId) => {
-    console.log('🔴 Reject button clicked for token:', tokenId);
     try {
       setLoading(true);
       await factoryActions.rejectTokenRequest(tokenId);
-      console.log('Token talebi reddedildi!');
       loadAdminData();
     } catch (error) {
       console.error('Error rejecting token:', error);
@@ -513,11 +495,9 @@ const Admin = () => {
   };
 
   const handleDeployToken = async (tokenId) => {
-    console.log('🚀 Deploy button clicked for token:', tokenId);
     try {
       setLoading(true);
       await factoryActions.deployToken(tokenId);
-      console.log('Token deploy edildi!');
       loadAdminData();
     } catch (error) {
       console.error('Error deploying token:', error);
@@ -535,7 +515,6 @@ const Admin = () => {
       const artistTokenAmount = '10000';
       
       await swapActions.createPool(tokenAddress, mainTokenAmount, artistTokenAmount);
-      console.log('Pool oluşturuldu!');
       loadAdminData();
     } catch (error) {
       console.error('Error creating pool:', error);
@@ -721,7 +700,6 @@ const Admin = () => {
                 return validTokens.length > 0 ? (
                   <RequestGrid>
                     {validTokens.map((token, index) => {
-                      console.log('🟡 Rendering valid token:', token);
                       return (
                         <RequestCard
                           key={token.id}
@@ -752,7 +730,6 @@ const Admin = () => {
                             <ActionButton
                               variant="reject"
                               onClick={() => {
-                                console.log('🔴 Reject button clicked for token:', token.id);
                                 handleRejectToken(token.id);
                               }}
                               disabled={loading}

@@ -161,18 +161,15 @@ const Artists = () => {
     
     setLoading(true);
     try {
-      console.log('Loading approved artists...');
       
       // Get approved artist addresses
       const approvedAddresses = await contracts.factory.getApprovedArtists();
-      console.log('Approved addresses:', approvedAddresses);
       
       const artistsWithInfo = [];
       
       for (const artistAddress of approvedAddresses) {
         try {
           const info = await contracts.factory.getArtistInfo(artistAddress);
-          console.log('Artist info for', artistAddress, ':', info);
           
           let artistData = {
             address: artistAddress,
@@ -206,7 +203,6 @@ const Artists = () => {
         }
       }
       
-      console.log('Processed approved artists:', artistsWithInfo);
       setApprovedArtists(artistsWithInfo);
     } catch (error) {
       console.error('Error loading approved artists:', error);

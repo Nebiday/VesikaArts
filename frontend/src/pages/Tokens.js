@@ -255,18 +255,14 @@ const Tokens = () => {
 
   const loadDeployedTokens = async () => {
     if (!contracts.factory) {
-      console.log('🔴 Factory contract not available');
       return;
     }
     
     setLoading(true);
     try {
-      console.log('🟡 Loading deployed tokens...');
-      console.log('🟡 Factory contract:', contracts.factory.address);
       
       // Get deployed token count
       const deployedCount = await contracts.factory.deployedTokenCount();
-      console.log('🟡 Deployed token count:', deployedCount.toNumber());
       
       // Get all token requests and filter for deployed ones
       const deployedTokens = [];
@@ -293,14 +289,12 @@ const Tokens = () => {
           if (tokenData.deployed && tokenData.tokenAddress && 
               tokenData.tokenAddress !== '0x0000000000000000000000000000000000000000') {
             deployedTokens.push(tokenData);
-            console.log(`🟢 Found deployed token: ${tokenData.name}`);
           }
         } catch (e) {
           console.error(`🔴 Error getting request ${i}:`, e);
         }
       }
       
-      console.log('🟢 Deployed tokens found:', deployedTokens);
       
       const tokensWithInfo = [];
       let totalSupplySum = 0;
@@ -312,7 +306,6 @@ const Tokens = () => {
           if (tokenInfo.artist && tokenInfo.artist !== '0x0000000000000000000000000000000000000000') {
             try {
               const artistData = await contracts.factory.getArtistInfo(tokenInfo.artist);
-              console.log('🟡 Artist data for', tokenInfo.artist, ':', artistData);
               if (artistData.profileMetadata) {
                 const metadata = JSON.parse(artistData.profileMetadata);
                 artistInfo.name = metadata.name || 'Unknown Artist';
@@ -328,7 +321,6 @@ const Tokens = () => {
             artistName: artistInfo.name
           };
           
-          console.log('🟢 Processed token data:', tokenData);
           tokensWithInfo.push(tokenData);
           totalSupplySum += parseFloat(tokenInfo.maxSupply || '0');
         } catch (error) {
@@ -336,7 +328,6 @@ const Tokens = () => {
         }
       }
       
-      console.log('🟢 Final processed tokens:', tokensWithInfo);
       setDeployedTokens(tokensWithInfo);
       setStats({
         totalTokens: tokensWithInfo.length,
