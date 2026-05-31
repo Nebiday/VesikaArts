@@ -224,6 +224,9 @@ contract ArtistTokenFactory is AccessControl, Pausable, ReentrancyGuard {
         pendingArtists[pendingIndex] = pendingArtists[pendingArtists.length - 1];
         pendingArtists.pop();
         
+        // Kaydı sıfırla ki sanatçı tekrar başvurabilsin
+        artists[artistAddress].isRegistered = false;
+        
         emit ArtistRejected(artistAddress, msg.sender);
     }
 

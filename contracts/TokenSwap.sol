@@ -180,20 +180,19 @@ contract TokenSwap is AccessControl, ReentrancyGuard, Pausable {
         LiquidityPool storage pool = pools[artistToken];
         require(pool.isActive, "Pool is not active");
         
-        // Çıktı miktarını hesapla (AMM formülü: x * y = k)
-        uint256 artistTokenOut = getAmountOut(mainTokenAmount, pool.mainTokenReserve, pool.artistTokenReserve);
-        require(artistTokenOut >= minArtistTokenOut, "Insufficient output amount");
-        
-        // Fee hesapla
+        // Fee'yi girdiden düş, çıktıyı fee düşülmüş girdi üzerinden hesapla (AMM: x * y = k)
         uint256 fee = (mainTokenAmount * swapFee) / FEE_DENOMINATOR;
         uint256 mainTokenAmountAfterFee = mainTokenAmount - fee;
+        
+        uint256 artistTokenOut = getAmountOut(mainTokenAmountAfterFee, pool.mainTokenReserve, pool.artistTokenReserve);
+        require(artistTokenOut >= minArtistTokenOut, "Insufficient output amount");
         
         // Token'ları transfer et
         mainToken.safeTransferFrom(msg.sender, address(this), mainTokenAmount);
         IERC20(artistToken).safeTransfer(msg.sender, artistTokenOut);
         
-        // Pool'u güncelle
-        pool.mainTokenReserve += mainTokenAmountAfterFee;
+        // Pool'u güncelle - fee havuzda kalır (LP'lere kazanç olarak yansır)
+        pool.mainTokenReserve += mainTokenAmount;
         pool.artistTokenReserve -= artistTokenOut;
         
         emit SwapExecuted(msg.sender, address(mainToken), artistToken, mainTokenAmount, artistTokenOut);
@@ -213,20 +212,19 @@ contract TokenSwap is AccessControl, ReentrancyGuard, Pausable {
         LiquidityPool storage pool = pools[artistToken];
         require(pool.isActive, "Pool is not active");
         
-        // Çıktı miktarını hesapla
-        uint256 mainTokenOut = getAmountOut(artistTokenAmount, pool.artistTokenReserve, pool.mainTokenReserve);
-        require(mainTokenOut >= minMainTokenOut, "Insufficient output amount");
-        
-        // Fee hesapla
+        // Fee'yi girdiden düş, çıktıyı fee düşülmüş girdi üzerinden hesapla
         uint256 fee = (artistTokenAmount * swapFee) / FEE_DENOMINATOR;
         uint256 artistTokenAmountAfterFee = artistTokenAmount - fee;
+        
+        uint256 mainTokenOut = getAmountOut(artistTokenAmountAfterFee, pool.artistTokenReserve, pool.mainTokenReserve);
+        require(mainTokenOut >= minMainTokenOut, "Insufficient output amount");
         
         // Token'ları transfer et
         IERC20(artistToken).safeTransferFrom(msg.sender, address(this), artistTokenAmount);
         mainToken.safeTransfer(msg.sender, mainTokenOut);
         
-        // Pool'u güncelle
-        pool.artistTokenReserve += artistTokenAmountAfterFee;
+        // Pool'u güncelle - fee havuzda kalır (LP'lere kazanç olarak yansır)
+        pool.artistTokenReserve += artistTokenAmount;
         pool.mainTokenReserve -= mainTokenOut;
         
         emit SwapExecuted(msg.sender, artistToken, address(mainToken), artistTokenAmount, mainTokenOut);

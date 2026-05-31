@@ -37,12 +37,8 @@ async function main() {
   // 5. İlk yapılandırma
   console.log("\n5. Initial configuration...");
 
-  // Factory'ye MINTER_ROLE ver
-  const MINTER_ROLE = await vesikaCoin.MINTER_ROLE();
-  await vesikaCoin.grantRole(MINTER_ROLE, factory.address);
-  console.log("Granted MINTER_ROLE to factory");
-
   // VesikaSale'e MINTER_ROLE ver (VSK satışı için)
+  const MINTER_ROLE = await vesikaCoin.MINTER_ROLE();
   await vesikaCoin.grantRole(MINTER_ROLE, vesikaSale.address);
   console.log("Granted MINTER_ROLE to VesikaSale");
 
@@ -54,7 +50,12 @@ async function main() {
   // Factory'ye TokenSwap adresini set et
   await factory.setTokenSwap(tokenSwap.address);
   console.log("Set TokenSwap address in Factory");
-  console.log("Factory will mint 1000 VSK to each approved artist automatically");
+
+  // VesikaSale başlangıç envanterini ayarla (aksi halde buyVesika revert eder)
+  const initialSaleInventory = ethers.utils.parseEther("1000000"); // 1,000,000 VSK
+  await vesikaSale.setInventory(initialSaleInventory);
+  console.log("Set VesikaSale inventory to 1,000,000 VSK");
+  console.log("Note: Send VSK bonus to artists manually via scripts/send-artist-bonus.js");
 
   // Deployment bilgilerini kaydet
   const deploymentInfo = {

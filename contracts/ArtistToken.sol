@@ -38,11 +38,6 @@ contract ArtistToken is ERC20, ERC20Burnable, AccessControl, Pausable {
         _;
     }
 
-    modifier onlyFactory() {
-        require(msg.sender == factory, "Caller is not the factory");
-        _;
-    }
-
     constructor(
         string memory name,
         string memory symbol,
@@ -134,23 +129,6 @@ contract ArtistToken is ERC20, ERC20Burnable, AccessControl, Pausable {
      */
     function setSwapEnabled(bool enabled) external onlyArtist {
         swapEnabled = enabled;
-    }
-
-    /**
-     * @dev Sanatçı tarafından ek token mint etme
-     */
-    function mintByArtist(address to, uint256 amount) external onlyArtist {
-        require(totalSupply() + amount <= maxSupply, "Exceeds max supply");
-        require(whitelist[to], "Recipient not whitelisted");
-        _mint(to, amount);
-    }
-
-    /**
-     * @dev Factory tarafından token mint etme (swap için)
-     */
-    function mintByFactory(address to, uint256 amount) external onlyFactory {
-        require(totalSupply() + amount <= maxSupply, "Exceeds max supply");
-        _mint(to, amount);
     }
 
     /**
