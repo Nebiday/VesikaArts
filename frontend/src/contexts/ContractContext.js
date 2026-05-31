@@ -54,6 +54,16 @@ export const ContractProvider = ({ children }) => {
           vesikaSale: deploymentData.contracts.VesikaSale,
         };
       }
+      if (chainId === 11155111) {
+        // Sepolia - deployment dosyasından oku
+        const deploymentData = require('../deployments/sepolia.json');
+        return {
+          vesikaCoin: deploymentData.contracts.VesikaCoin,
+          factory: deploymentData.contracts.ArtistTokenFactory,
+          tokenSwap: deploymentData.contracts.TokenSwap,
+          vesikaSale: deploymentData.contracts.VesikaSale,
+        };
+      }
     } catch (error) {
       console.warn('Could not load deployment file, falling back to env variables:', error.message);
     }
