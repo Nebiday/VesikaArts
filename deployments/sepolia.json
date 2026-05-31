@@ -1,0 +1,12 @@
+{
+  "network": "sepolia",
+  "deployer": "0x9B028fee71fd3fC64410d623509b29457E81a93c",
+  "contracts": {
+    "VesikaCoin": "0xDE58A1893b518eDEDb5c0B7d502AB9F61B094654",
+    "ArtistTokenFactory": "0x1c623418A6fe6be4d753dc16163a241eD03b217D",
+    "TokenSwap": "0x0264aAa29A87afbE8A3915fd977A614a649fd3AC",
+    "VesikaSale": "0xC648E83a6bb5D51F3aa94A6d262b46F9Da3FECf4"
+  },
+  "timestamp": "2026-05-31T07:14:18.744Z",
+  "blockNumber": 10959631
+}
