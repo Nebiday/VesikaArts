@@ -181,7 +181,7 @@ describe("ArtistTokenFactory", function () {
     it("Should allow token deployment after approval", async function () {
       await factory.connect(approver).approveTokenRequest(requestId);
       
-      const tx = await factory.deployToken(requestId);
+      const tx = await factory.connect(artist).deployToken(requestId);
       const receipt = await tx.wait();
       const event = receipt.events.find(e => e.event === "TokenDeployed");
       
@@ -198,16 +198,16 @@ describe("ArtistTokenFactory", function () {
 
     it("Should not allow deployment without approval", async function () {
       await expect(
-        factory.deployToken(requestId)
+        factory.connect(artist).deployToken(requestId)
       ).to.be.revertedWith("Request not approved");
     });
 
     it("Should not allow double deployment", async function () {
       await factory.connect(approver).approveTokenRequest(requestId);
-      await factory.deployToken(requestId);
+      await factory.connect(artist).deployToken(requestId);
 
       await expect(
-        factory.deployToken(requestId)
+        factory.connect(artist).deployToken(requestId)
       ).to.be.revertedWith("Token already deployed");
     });
   });
@@ -246,9 +246,10 @@ describe("ArtistTokenFactory", function () {
 
     it("Should return pending requests", async function () {
       const pendingRequests = await factory.getPendingRequests();
-      expect(pendingRequests.length).to.equal(2);
-      expect(pendingRequests).to.include(requestId1);
-      expect(pendingRequests).to.include(requestId2);
+      const ids = pendingRequests.map(r => r.toNumber());
+      expect(ids.length).to.equal(2);
+      expect(ids).to.include(requestId1.toNumber());
+      expect(ids).to.include(requestId2.toNumber());
     });
 
     it("Should return approved requests", async function () {
@@ -261,7 +262,7 @@ describe("ArtistTokenFactory", function () {
 
     it("Should return artist tokens after deployment", async function () {
       await factory.connect(approver).approveTokenRequest(requestId1);
-      await factory.deployToken(requestId1);
+      await factory.connect(artist).deployToken(requestId1);
 
       const artistTokens = await factory.getArtistTokens(artist.address);
       expect(artistTokens.length).to.equal(1);
@@ -273,8 +274,8 @@ describe("ArtistTokenFactory", function () {
     it("Should return all deployed tokens", async function () {
       await factory.connect(approver).approveTokenRequest(requestId1);
       await factory.connect(approver).approveTokenRequest(requestId2);
-      await factory.deployToken(requestId1);
-      await factory.deployToken(requestId2);
+      await factory.connect(artist).deployToken(requestId1);
+      await factory.connect(artist).deployToken(requestId2);
 
       const allTokens = await factory.getAllDeployedTokens();
       expect(allTokens.length).to.equal(2);
