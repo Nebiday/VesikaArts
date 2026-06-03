@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useContracts } from '../contexts/ContractContext';
+import { InputGroup, Label, Input, Button } from './ui';
 
 const SaleSection = styled.div`
   margin-top: 2rem;
@@ -45,46 +45,6 @@ const FormCard = styled.div`
 const FormTitle = styled.h3`
   margin-bottom: 1rem;
   color: #1f2937;
-`;
-
-const InputGroup = styled.div`
-  margin-bottom: 1rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-`;
-
-const Button = styled(motion.button)`
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-right: 1rem;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 const VesikaSaleAdmin = () => {

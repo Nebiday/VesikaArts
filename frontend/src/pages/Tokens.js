@@ -3,17 +3,7 @@ import { useContracts } from '../contexts/ContractContext';
 import { ethers } from 'ethers';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
-const TokensContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 1400px;
-  margin: 0 auto;
-`;
+import { PageContainer, ContentContainer, StatusBadge } from '../components/ui';
 
 const Header = styled.div`
   text-align: center;
@@ -95,16 +85,6 @@ const TokenHeader = styled.div`
     font-size: 1.4rem;
     font-weight: 600;
   }
-`;
-
-const StatusBadge = styled.span`
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
 `;
 
 const TokenInfo = styled.div`
@@ -211,7 +191,7 @@ const EmptyState = styled.div`
 `;
 
 const Tokens = () => {
-  const { contracts, factoryActions } = useContracts();
+  const { contracts } = useContracts();
   const [deployedTokens, setDeployedTokens] = useState([]);
   const [stats, setStats] = useState({
     totalTokens: 0,
@@ -260,9 +240,6 @@ const Tokens = () => {
     
     setLoading(true);
     try {
-      
-      // Get deployed token count
-      const deployedCount = await contracts.factory.deployedTokenCount();
       
       // Get all token requests and filter for deployed ones
       const deployedTokens = [];
@@ -343,21 +320,21 @@ const Tokens = () => {
 
   if (loading) {
     return (
-      <TokensContainer>
-        <Container>
+      <PageContainer $variant="brand">
+        <ContentContainer $maxWidth="1400px">
           <Header>
             <h1>🪙 Deployed Tokens</h1>
             <p>Explore tokens deployed on the platform</p>
           </Header>
           <LoadingSpinner />
-        </Container>
-      </TokensContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <TokensContainer>
-      <Container>
+    <PageContainer $variant="brand">
+      <ContentContainer $maxWidth="1400px">
         <Header>
           <h1>🪙 Deployed Tokens</h1>
           <p>Explore tokens deployed on the platform</p>
@@ -399,7 +376,7 @@ const Tokens = () => {
               >
                 <TokenHeader>
                   <h3>{token.name} ({token.symbol})</h3>
-                  <StatusBadge>Deployed</StatusBadge>
+                  <StatusBadge $status="deployed">Deployed</StatusBadge>
                 </TokenHeader>
 
                 <TokenInfo>
@@ -448,8 +425,8 @@ const Tokens = () => {
             <p>There are no tokens deployed on the platform yet.</p>
           </EmptyState>
         )}
-      </Container>
-    </TokensContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 

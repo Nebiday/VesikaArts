@@ -5,16 +5,19 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 const NavbarContainer = styled.nav`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(13, 16, 33, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   padding: 1rem 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
 `;
 
 const NavContent = styled.div`
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -24,7 +27,7 @@ const NavContent = styled.div`
 const Logo = styled(Link)`
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: #fff;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -40,16 +43,16 @@ const NavLinks = styled.div`
   gap: 2rem;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     gap: 1rem;
   }
 `;
 
 const NavLink = styled(Link)`
-  color: white;
+  color: #fff;
   text-decoration: none;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: ${({ theme }) => theme.radii.md};
   transition: all 0.3s ease;
   position: relative;
 
@@ -72,10 +75,10 @@ const WalletSection = styled.div`
 
 const ConnectButton = styled(motion.button)`
   background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-  color: white;
+  color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: ${({ theme }) => theme.radii.md};
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -95,15 +98,15 @@ const WalletInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  color: white;
+  color: #fff;
   font-size: 0.875rem;
 `;
 
 const Address = styled.span`
-  font-family: monospace;
+  font-family: ${({ theme }) => theme.fonts.mono};
   background: rgba(255, 255, 255, 0.1);
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: ${({ theme }) => theme.radii.sm};
   margin-bottom: 0.25rem;
 `;
 
@@ -112,10 +115,11 @@ const Balance = styled.span`
 `;
 
 const NetworkIndicator = styled.div`
-  background: ${props => props.isCorrect ? '#10b981' : '#ef4444'};
-  color: white;
+  background: ${({ theme, $isCorrect }) =>
+    $isCorrect ? theme.colors.success : theme.colors.danger};
+  color: #fff;
   padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
+  border-radius: ${({ theme }) => theme.radii.xl};
   font-size: 0.75rem;
   font-weight: 600;
 `;
@@ -179,7 +183,7 @@ const Navbar = () => {
         <WalletSection>
           {isConnected && (
             <>
-              <NetworkIndicator isCorrect={isCorrectNetwork}>
+              <NetworkIndicator $isCorrect={isCorrectNetwork}>
                 {getNetworkName(chainId)}
               </NetworkIndicator>
               

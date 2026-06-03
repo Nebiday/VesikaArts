@@ -2,26 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useWeb3 } from '../contexts/Web3Context';
 import { useContracts } from '../contexts/ContractContext';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-
-const StakingContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #1f2937;
-`;
+import {
+  PageContainer,
+  ContentContainer,
+  PageTitle,
+  SectionTitle,
+  Card,
+  InputGroup,
+  Label,
+  Input,
+  Select,
+  Button,
+} from '../components/ui';
 
 const StakingGrid = styled.div`
   display: grid;
@@ -31,79 +24,6 @@ const StakingGrid = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-  }
-`;
-
-const Card = styled(motion.div)`
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const CardTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const InputGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  background: white;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-`;
-
-const Button = styled(motion.button)`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  font-size: 1rem;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
   }
 `;
 
@@ -278,24 +198,24 @@ const Staking = () => {
 
   if (!isConnected) {
     return (
-      <StakingContainer>
-        <Container>
-          <Title>Staking</Title>
+      <PageContainer>
+        <ContentContainer>
+          <PageTitle>Staking</PageTitle>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
               <h3>Connect your wallet</h3>
               <p>You need to connect your wallet first to stake.</p>
             </div>
           </Card>
-        </Container>
-      </StakingContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <StakingContainer>
-      <Container>
-        <Title>VesikaCoin Staking</Title>
+    <PageContainer>
+      <ContentContainer>
+        <PageTitle>VesikaCoin Staking</PageTitle>
         
         <StakingGrid>
           {/* Stake Section */}
@@ -304,9 +224,9 @@ const Staking = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <CardTitle>
+            <SectionTitle>
               💎 Stake
-            </CardTitle>
+            </SectionTitle>
 
             <InfoGrid>
               <InfoItem>
@@ -355,6 +275,7 @@ const Staking = () => {
                 </InputGroup>
 
                 <Button
+                  $fullWidth
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleStake}
@@ -379,9 +300,9 @@ const Staking = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <CardTitle>
+            <SectionTitle>
               📊 Current Stake
-            </CardTitle>
+            </SectionTitle>
 
             {stakeInfo?.isActive ? (
               <>
@@ -411,6 +332,7 @@ const Staking = () => {
 
                 {parseFloat(pendingReward) > 0 && (
                   <Button
+                    $fullWidth
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleClaimRewards}
@@ -423,11 +345,12 @@ const Staking = () => {
 
                 {getTimeRemaining() === 'Lock period ended' && (
                   <Button
+                    $fullWidth
+                    $variant="danger"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleUnstake}
                     disabled={loading}
-                    style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)' }}
                   >
                     {loading ? 'Unstaking...' : 'Unstake'}
                   </Button>
@@ -448,9 +371,9 @@ const Staking = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <CardTitle>
+          <SectionTitle>
             ℹ️ About Staking
-          </CardTitle>
+          </SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div>
               <h4 style={{ marginBottom: '1rem', color: '#374151' }}>How It Works?</h4>
@@ -472,8 +395,8 @@ const Staking = () => {
             </div>
           </div>
         </Card>
-      </Container>
-    </StakingContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 

@@ -1,44 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useContracts } from '../contexts/ContractContext';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-
-const ArtistsContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #1f2937;
-`;
+import {
+  PageContainer,
+  ContentContainer,
+  PageTitle,
+  Card,
+  StatusBadge,
+} from '../components/ui';
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
-`;
-
-const ArtistCard = styled(motion.div)`
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
 `;
 
 const ArtistHeader = styled.div`
@@ -52,15 +27,6 @@ const ArtistName = styled.h3`
   font-size: 1.5rem;
   color: #1f2937;
   margin: 0;
-`;
-
-const StatusBadge = styled.span`
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
 `;
 
 const ArtistInfo = styled.div`
@@ -119,7 +85,7 @@ const EmptyMessage = styled.div`
 `;
 
 const Artists = () => {
-  const { contracts, factoryActions } = useContracts();
+  const { contracts } = useContracts();
   const [approvedArtists, setApprovedArtists] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -213,24 +179,25 @@ const Artists = () => {
 
   if (loading) {
     return (
-      <ArtistsContainer>
-        <Container>
-          <Title>Approved Artists</Title>
+      <PageContainer>
+        <ContentContainer>
+          <PageTitle>Approved Artists</PageTitle>
           <LoadingMessage>Loading artists...</LoadingMessage>
-        </Container>
-      </ArtistsContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <ArtistsContainer>
-      <Container>
-        <Title>Approved Artists</Title>
+    <PageContainer>
+      <ContentContainer>
+        <PageTitle>Approved Artists</PageTitle>
         
         {approvedArtists.length > 0 ? (
           <Grid>
             {approvedArtists.map((artist, index) => (
-              <ArtistCard
+              <Card
+                $hover
                 key={artist.address}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -238,7 +205,7 @@ const Artists = () => {
               >
                 <ArtistHeader>
                   <ArtistName>{artist.name}</ArtistName>
-                  <StatusBadge>Approved</StatusBadge>
+                  <StatusBadge $status="approved">Approved</StatusBadge>
                 </ArtistHeader>
 
                 <ArtistInfo>
@@ -296,7 +263,7 @@ const Artists = () => {
                 <TokenCount>
                   🪙 Created {artist.tokenCount} Token(s)
                 </TokenCount>
-              </ArtistCard>
+              </Card>
             ))}
           </Grid>
         ) : (
@@ -305,8 +272,8 @@ const Artists = () => {
             <p>The platform hasn't approved any artists yet. Register to become the first artist!</p>
           </EmptyMessage>
         )}
-      </Container>
-    </ArtistsContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 

@@ -3,14 +3,9 @@ import { useContracts } from '../contexts/ContractContext';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import VesikaSaleAdmin from '../components/VesikaSaleAdmin';
+import { PageContainer } from '../components/ui';
 
 // Styled Components
-const AdminContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
-`;
-
 const AdminCard = styled(motion.div)`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
@@ -89,7 +84,7 @@ const TabButton = styled.button`
   transition: all 0.3s ease;
   min-width: 150px;
   
-  ${props => props.active ? `
+  ${props => props.$active ? `
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
@@ -188,7 +183,7 @@ const ActionButton = styled.button`
   transition: all 0.3s ease;
   font-size: 0.9rem;
   
-  ${props => props.variant === 'approve' ? `
+  ${props => props.$variant === 'approve' ? `
     background: linear-gradient(135deg, #28a745, #20c997);
     color: white;
     
@@ -197,7 +192,7 @@ const ActionButton = styled.button`
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
     }
-  ` : props.variant === 'info' ? `
+  ` : props.$variant === 'info' ? `
     background: linear-gradient(135deg, #17a2b8, #138496);
     color: white;
     
@@ -248,10 +243,10 @@ const StatusBadge = styled.span`
   font-size: 0.8rem;
   font-weight: 600;
   
-  ${props => props.status === 'pending' ? `
+  ${props => props.$status === 'pending' ? `
     background: linear-gradient(135deg, #ffc107, #ff8c00);
     color: white;
-  ` : props.status === 'deployed' ? `
+  ` : props.$status === 'deployed' ? `
     background: linear-gradient(135deg, #28a745, #20c997);
     color: white;
   ` : `
@@ -303,7 +298,7 @@ const LoadingSpinner = styled.div`
 `;
 
 const Admin = () => {
-  const { contracts, account, factoryActions, swapActions, provider, signer } = useContracts();
+  const { contracts, account, factoryActions, swapActions } = useContracts();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('artists');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -317,12 +312,6 @@ const Admin = () => {
     totalTokens: 0,
     pendingTokens: 0
   });
-
-  // VesikaSale states
-  const [vesikaSaleContract, setVesikaSaleContract] = useState(null);
-  const [saleInfo, setSaleInfo] = useState(null);
-  const [rateForm, setRateForm] = useState('');
-  const [inventoryForm, setInventoryForm] = useState('');
 
   // Safe timestamp formatting
   const formatTimestamp = (timestamp) => {
@@ -526,7 +515,7 @@ const Admin = () => {
 
   if (!account) {
     return (
-      <AdminContainer>
+      <PageContainer $variant="brand">
         <AdminCard
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -537,13 +526,13 @@ const Admin = () => {
             <p>Please connect your wallet to access the admin panel.</p>
           </EmptyState>
         </AdminCard>
-      </AdminContainer>
+      </PageContainer>
     );
   }
 
   if (!isAdmin) {
     return (
-      <AdminContainer>
+      <PageContainer $variant="brand">
         <AdminCard
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -554,12 +543,12 @@ const Admin = () => {
             <p>You do not have permission to access this page.</p>
           </EmptyState>
         </AdminCard>
-      </AdminContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <AdminContainer>
+    <PageContainer $variant="brand">
       <AdminCard
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -604,31 +593,31 @@ const Admin = () => {
         <TabContainer>
           <TabButtons>
             <TabButton
-              active={activeTab === 'artists'}
+              $active={activeTab === 'artists'}
               onClick={() => setActiveTab('artists')}
             >
               👨‍🎨 Artist Requests
             </TabButton>
             <TabButton
-              active={activeTab === 'tokens'}
+              $active={activeTab === 'tokens'}
               onClick={() => setActiveTab('tokens')}
             >
               🪙 Token Requests
             </TabButton>
             <TabButton
-              active={activeTab === 'approved-tokens'}
+              $active={activeTab === 'approved-tokens'}
               onClick={() => setActiveTab('approved-tokens')}
             >
               ✅ Approved Tokens
             </TabButton>
             <TabButton
-              active={activeTab === 'deployed-tokens'}
+              $active={activeTab === 'deployed-tokens'}
               onClick={() => setActiveTab('deployed-tokens')}
             >
               🚀 Deployed Tokens
             </TabButton>
             <TabButton
-              active={activeTab === 'sale-management'}
+              $active={activeTab === 'sale-management'}
               onClick={() => setActiveTab('sale-management')}
             >
               💰 VSK Sale Management
@@ -654,7 +643,7 @@ const Admin = () => {
                       >
                         <RequestHeader>
                           <h3>👨‍🎨 Artist Application</h3>
-                          <StatusBadge status="pending">⏳ Pending</StatusBadge>
+                          <StatusBadge $status="pending">⏳ Pending</StatusBadge>
                         </RequestHeader>
                         <RequestDetails>
                           <DetailRow>
@@ -666,14 +655,14 @@ const Admin = () => {
                         </RequestDetails>
                         <ButtonGroup>
                           <ActionButton
-                            variant="approve"
+                            $variant="approve"
                             onClick={() => handleApproveArtist(artist.address)}
                             disabled={loading}
                           >
                             ✅ Approve
                           </ActionButton>
                           <ActionButton
-                            variant="reject"
+                            $variant="reject"
                             onClick={() => handleRejectArtist(artist.address)}
                             disabled={loading}
                           >
@@ -721,14 +710,14 @@ const Admin = () => {
                           </RequestDetails>
                           <ButtonGroup>
                             <ActionButton
-                              variant="approve"
+                              $variant="approve"
                               onClick={() => handleApproveToken(token.id)}
                               disabled={loading}
                             >
                               ✅ Approve
                             </ActionButton>
                             <ActionButton
-                              variant="reject"
+                              $variant="reject"
                               onClick={() => {
                                 handleRejectToken(token.id);
                               }}
@@ -779,7 +768,7 @@ const Admin = () => {
                       <ButtonGroup>
                         {!token.deployed ? (
                           <ActionButton
-                            variant="approve"
+                            $variant="approve"
                             onClick={() => handleDeployToken(token.id)}
                             disabled={loading}
                           >
@@ -787,7 +776,7 @@ const Admin = () => {
                           </ActionButton>
                         ) : (
                           <ActionButton
-                            variant="approve"
+                            $variant="approve"
                             onClick={() => handleCreatePool(token.tokenAddress)}
                             disabled={loading}
                           >
@@ -813,7 +802,7 @@ const Admin = () => {
                     <RequestCard key={index}>
                       <RequestHeader>
                         <h3>🚀 {token.name} ({token.symbol})</h3>
-                        <StatusBadge status="deployed">🚀 Deployed</StatusBadge>
+                        <StatusBadge $status="deployed">🚀 Deployed</StatusBadge>
                       </RequestHeader>
                       <RequestDetails>
                         <DetailRow>
@@ -829,13 +818,13 @@ const Admin = () => {
                       </RequestDetails>
                       <ButtonGroup>
                         <ActionButton
-                          variant="info"
+                          $variant="info"
                           onClick={() => window.open(`https://etherscan.io/token/${token.address}`, '_blank')}
                         >
                           🔍 View on Etherscan
                         </ActionButton>
                         <ActionButton
-                          variant="approve"
+                          $variant="approve"
                           onClick={() => handleCreatePool(token.address)}
                           disabled={loading}
                         >
@@ -860,7 +849,7 @@ const Admin = () => {
           </ContentSection>
         </TabContainer>
       </AdminCard>
-    </AdminContainer>
+    </PageContainer>
   );
 };
 

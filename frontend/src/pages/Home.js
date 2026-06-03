@@ -5,35 +5,34 @@ import { useWeb3 } from '../contexts/Web3Context';
 import { useContracts } from '../contexts/ContractContext';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
-const HomeContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-`;
+import { PageContainer } from '../components/ui';
 
 const HeroSection = styled.section`
   padding: 4rem 2rem;
   text-align: center;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 `;
 
 const HeroTitle = styled(motion.h1)`
-  font-size: 3.5rem;
-  font-weight: bold;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-size: 3.75rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ffffff 0%, #d8ccff 45%, #7df0ff 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 12px 40px rgba(124, 92, 255, 0.45));
   margin-bottom: 1rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: 2.5rem;
   }
 `;
 
 const HeroSubtitle = styled(motion.p)`
   font-size: 1.25rem;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
@@ -46,41 +45,45 @@ const CTAButtons = styled(motion.div)`
   justify-content: center;
   margin-bottom: 4rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: column;
     align-items: center;
   }
 `;
 
 const CTAButton = styled(Link)`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
+  background: ${({ theme }) => theme.gradients.brand};
+  color: #fff;
+  padding: 1rem 2.2rem;
+  border-radius: ${({ theme }) => theme.radii.pill};
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: inline-block;
+  box-shadow: ${({ theme }) => theme.shadows.brand};
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: ${({ theme }) => theme.shadows.glow};
   }
 
   &.secondary {
-    background: white;
-    color: #667eea;
-    border: 2px solid #667eea;
+    background: #fff;
+    color: ${({ theme }) => theme.colors.primary};
+    border: 2px solid ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const StatsSection = styled.section`
-  background: white;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   padding: 3rem 2rem;
   margin: 2rem auto;
-  max-width: 1200px;
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: ${({ theme }) => theme.layout.maxWidth};
+  border-radius: ${({ theme }) => theme.radii.xl};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 `;
 
 const StatsGrid = styled.div`
@@ -92,33 +95,35 @@ const StatsGrid = styled.div`
 const StatCard = styled(motion.div)`
   text-align: center;
   padding: 2rem;
-  border-radius: 0.5rem;
+  border-radius: ${({ theme }) => theme.radii.md};
   background: linear-gradient(135deg, #f8fafc, #e2e8f0);
 `;
 
 const StatNumber = styled.div`
   font-size: 2.5rem;
   font-weight: bold;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 0.5rem;
 `;
 
 const StatLabel = styled.div`
-  color: #6b7280;
+  color: ${({ theme }) => theme.colors.muted};
   font-weight: 500;
 `;
 
 const FeaturesSection = styled.section`
   padding: 4rem 2rem;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 3rem;
-  color: #1f2937;
+  color: #fff;
+  filter: drop-shadow(0 8px 24px rgba(124, 92, 255, 0.35));
 `;
 
 const FeaturesGrid = styled.div`
@@ -128,16 +133,19 @@ const FeaturesGrid = styled.div`
 `;
 
 const FeatureCard = styled(motion.div)`
-  background: white;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: ${({ theme }) => theme.radii.xl};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
   text-align: center;
-  transition: all 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: ${({ theme }) => theme.shadows.glow};
   }
 `;
 
@@ -149,17 +157,17 @@ const FeatureIcon = styled.div`
 const FeatureTitle = styled.h3`
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const FeatureDescription = styled.p`
-  color: #6b7280;
+  color: ${({ theme }) => theme.colors.muted};
   line-height: 1.6;
 `;
 
 const Home = () => {
   const { isConnected } = useWeb3();
-  const { contracts, vesikaCoinActions } = useContracts();
+  const { contracts } = useContracts();
   const [stats, setStats] = useState({
     totalSupply: '0',
     totalStaked: '0',
@@ -287,7 +295,7 @@ const Home = () => {
   ];
 
   return (
-    <HomeContainer>
+    <PageContainer $noPadding>
       <HeroSection>
         <HeroTitle
           initial={{ opacity: 0, y: 30 }}
@@ -382,7 +390,7 @@ const Home = () => {
           ))}
         </FeaturesGrid>
       </FeaturesSection>
-    </HomeContainer>
+    </PageContainer>
   );
 };
 

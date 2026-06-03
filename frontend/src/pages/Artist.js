@@ -4,24 +4,17 @@ import { useContracts } from '../contexts/ContractContext';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-
-const ArtistContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #1f2937;
-`;
+import {
+  PageContainer,
+  ContentContainer,
+  PageTitle,
+  SectionTitle,
+  Label,
+  Input,
+  TextArea,
+  Button,
+  StatusBadge,
+} from '../components/ui';
 
 const TabContainer = styled.div`
   display: flex;
@@ -36,15 +29,15 @@ const TabContainer = styled.div`
 const Tab = styled.button`
   padding: 0.75rem 1.5rem;
   border: none;
-  background: ${props => props.active ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'transparent'};
-  color: ${props => props.active ? 'white' : '#6b7280'};
+  background: ${props => props.$active ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'transparent'};
+  color: ${props => props.$active ? 'white' : '#6b7280'};
   border-radius: 0.25rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${props => props.active ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f3f4f6'};
+    background: ${props => props.$active ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f3f4f6'};
   }
 `;
 
@@ -54,15 +47,6 @@ const Card = styled(motion.div)`
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
-`;
-
-const CardTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 `;
 
 const Form = styled.form`
@@ -75,72 +59,6 @@ const InputGroup = styled.div`
   flex-direction: column;
 `;
 
-const Label = styled.label`
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-`;
-
-const Input = styled.input`
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-`;
-
-const TextArea = styled.textarea`
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  min-height: 100px;
-  resize: vertical;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-  }
-`;
-
-const Button = styled(motion.button)`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const StatusBadge = styled.span`
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background: ${props => {
-    switch (props.status) {
-      case 'approved': return '#10b981';
-      case 'pending': return '#f59e0b';
-      case 'rejected': return '#ef4444';
-      default: return '#6b7280';
-    }
-  }};
-  color: white;
-`;
-
 const RequestCard = styled.div`
   border: 2px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -150,7 +68,7 @@ const RequestCard = styled.div`
 
 const RequestHeader = styled.div`
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 `;
@@ -267,7 +185,7 @@ const Artist = () => {
       const standardSupply = '1000000';
       const standardSwapRate = '1';
       
-      const result = await factoryActions.requestToken(
+      await factoryActions.requestToken(
         tokenForm.name,
         tokenForm.symbol,
         standardSupply,           // maxSupply (standard 1M)
@@ -350,34 +268,34 @@ const Artist = () => {
 
   if (!isConnected) {
     return (
-      <ArtistContainer>
-        <Container>
-          <Title>Artist Panel</Title>
+      <PageContainer>
+        <ContentContainer>
+          <PageTitle>Artist Panel</PageTitle>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
               <h3>Connect your wallet</h3>
               <p>You need to connect your wallet first to access the artist panel.</p>
             </div>
           </Card>
-        </Container>
-      </ArtistContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <ArtistContainer>
-      <Container>
-        <Title>Artist Panel</Title>
+    <PageContainer>
+      <ContentContainer>
+        <PageTitle>Artist Panel</PageTitle>
 
         <TabContainer>
           <Tab 
-            active={activeTab === 'register'} 
+            $active={activeTab === 'register'} 
             onClick={() => setActiveTab('register')}
           >
             Register
           </Tab>
           <Tab 
-            active={activeTab === 'tokens'} 
+            $active={activeTab === 'tokens'} 
             onClick={() => setActiveTab('tokens')}
             disabled={!artistInfo?.isRegistered}
           >
@@ -391,9 +309,9 @@ const Artist = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <CardTitle>
+            <SectionTitle>
               🎨 Artist Registration
-            </CardTitle>
+            </SectionTitle>
 
             {artistInfo?.isRegistered ? (
               <div>
@@ -415,7 +333,7 @@ const Artist = () => {
                   </InfoItem>
                   <InfoItem>
                     <InfoLabel>Status</InfoLabel>
-                    <StatusBadge status={artistInfo.isApproved ? 'approved' : 'pending'}>
+                    <StatusBadge $status={artistInfo.isApproved ? 'approved' : 'pending'}>
                       {artistInfo.isApproved ? 'Approved' : 'Pending Approval'}
                     </StatusBadge>
                   </InfoItem>
@@ -496,9 +414,9 @@ const Artist = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <CardTitle>
+              <SectionTitle>
                 🪙 Create Token Request
-              </CardTitle>
+              </SectionTitle>
 
               {artistInfo?.isApproved ? (
                 <Form onSubmit={handleTokenRequest}>
@@ -567,16 +485,16 @@ const Artist = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <CardTitle>
+              <SectionTitle>
                 📋 My Token Requests
-              </CardTitle>
+              </SectionTitle>
 
               {tokenRequests.length > 0 ? (
                 tokenRequests.map((request, index) => (
                   <RequestCard key={index}>
                     <RequestHeader>
                       <RequestTitle>{request.name} ({request.symbol})</RequestTitle>
-                      <StatusBadge status={getStatusText(request.status)}>
+                      <StatusBadge $status={getStatusText(request.status)}>
                         {getStatusLabel(getStatusText(request.status))}
                       </StatusBadge>
                     </RequestHeader>
@@ -695,8 +613,8 @@ const Artist = () => {
             </Card>
           </>
         )}
-      </Container>
-    </ArtistContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 

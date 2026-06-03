@@ -3,33 +3,14 @@ import { useWeb3 } from '../contexts/Web3Context';
 import { useContracts } from '../contexts/ContractContext';
 import { ethers } from 'ethers';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-
-const SwapContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #1f2937;
-`;
-
-const Card = styled(motion.div)`
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
+import {
+  PageContainer,
+  ContentContainer,
+  PageTitle,
+  Card,
+  Button,
+} from '../components/ui';
 
 const SwapInterface = styled.div`
   display: flex;
@@ -89,24 +70,6 @@ const TokenSelect = styled.select`
   font-weight: 600;
   color: #374151;
   cursor: pointer;
-`;
-
-const SwapButton = styled(motion.button)`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  cursor: pointer;
-  margin: 1rem 0;
-  width: 100%;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 const SwapIcon = styled.div`
@@ -271,16 +234,6 @@ const Swap = () => {
       return;
     }
 
-    console.log('🟡 Starting swap:', {
-      fromToken,
-      toToken,
-      fromAmount,
-      toAmount,
-      availableTokens: availableTokens.length,
-      swapActions: !!swapActions,
-      tokenSwap: !!contracts.tokenSwap
-    });
-
     setLoading(true);
     try {
       const fromTokenData = availableTokens.find(t => t.symbol === fromToken);
@@ -362,13 +315,6 @@ const Swap = () => {
 
   // Load available tokens when contracts are ready
   useEffect(() => {
-    console.log('🟡 Swap useEffect - contracts:', {
-      factory: !!contracts.factory,
-      vesikaCoin: !!contracts.vesikaCoin,
-      tokenSwap: !!contracts.tokenSwap,
-      swapActions: !!swapActions
-    });
-    
     if (contracts.factory && contracts.vesikaCoin) {
       loadAvailableTokens();
     }
@@ -459,24 +405,24 @@ const Swap = () => {
 
   if (!isConnected) {
     return (
-      <SwapContainer>
-        <Container>
-          <Title>Token Swap</Title>
+      <PageContainer>
+        <ContentContainer $maxWidth="600px">
+          <PageTitle>Token Swap</PageTitle>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
               <h3>Connect your wallet</h3>
               <p>You need to connect your wallet first to swap.</p>
             </div>
           </Card>
-        </Container>
-      </SwapContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <SwapContainer>
-      <Container>
-        <Title>Token Swap</Title>
+    <PageContainer>
+      <ContentContainer $maxWidth="600px">
+        <PageTitle>Token Swap</PageTitle>
         
         <Card
           initial={{ opacity: 0, y: 20 }}
@@ -554,18 +500,19 @@ const Swap = () => {
               </TokenInput>
             </TokenSelector>
 
-            <SwapButton
+            <Button
+              $fullWidth
               onClick={handleSwap}
               disabled={loading || !fromAmount}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               {loading ? 'Swapping...' : 'Swap'}
-            </SwapButton>
+            </Button>
           </SwapInterface>
         </Card>
-      </Container>
-    </SwapContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 

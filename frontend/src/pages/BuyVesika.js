@@ -5,40 +5,17 @@ import { ethers } from 'ethers';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-
-const BuyContainer = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
-`;
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 1rem;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-`;
-
-const Subtitle = styled.p`
-  text-align: center;
-  color: rgba(255,255,255,0.9);
-  font-size: 1.2rem;
-  margin-bottom: 3rem;
-`;
-
-const Card = styled(motion.div)`
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  margin-bottom: 2rem;
-`;
+import {
+  PageContainer,
+  ContentContainer,
+  PageTitle,
+  Subtitle,
+  Card,
+  InputGroup,
+  Label,
+  Input,
+  Button,
+} from '../components/ui';
 
 const InfoGrid = styled.div`
   display: grid;
@@ -64,54 +41,6 @@ const InfoLabel = styled.div`
 const InfoValue = styled.div`
   font-size: 1.75rem;
   font-weight: bold;
-`;
-
-const InputGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: all 0.3s;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  }
-`;
-
-const Button = styled(motion.button)`
-  width: 100%;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-  }
 `;
 
 const OutputBox = styled.div`
@@ -273,28 +202,29 @@ const BuyVesika = () => {
 
   if (!isConnected) {
     return (
-      <BuyContainer>
-        <Container>
-          <Title>💎 Buy VesikaCoin</Title>
+      <PageContainer $variant="brand">
+        <ContentContainer $maxWidth="800px">
+          <PageTitle $onDark>💎 Buy VesikaCoin</PageTitle>
           <Card>
             <div style={{ textAlign: 'center', padding: '2rem' }}>
               <h3>Connect your wallet</h3>
               <p>You need to connect your wallet first to buy VesikaCoin.</p>
             </div>
           </Card>
-        </Container>
-      </BuyContainer>
+        </ContentContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <BuyContainer>
-      <Container>
-        <Title>💎 Buy VesikaCoin</Title>
-        <Subtitle>Buy VesikaCoin with ETH and use it on the platform!</Subtitle>
+    <PageContainer $variant="brand">
+      <ContentContainer $maxWidth="800px">
+        <PageTitle $onDark>💎 Buy VesikaCoin</PageTitle>
+        <Subtitle $onDark>Buy VesikaCoin with ETH and use it on the platform!</Subtitle>
 
         {/* Purchase Card */}
         <Card
+          style={{ marginBottom: '2rem' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -345,6 +275,7 @@ const BuyVesika = () => {
           </OutputBox>
 
           <Button
+            $fullWidth
             onClick={handleBuy}
             disabled={loading || !ethAmount || ethAmount === '0'}
             whileHover={{ scale: 1.02 }}
@@ -376,8 +307,8 @@ const BuyVesika = () => {
             </StatRow>
           </StatsCard>
         )}
-      </Container>
-    </BuyContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };
 
