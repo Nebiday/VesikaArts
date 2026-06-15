@@ -4,6 +4,10 @@ A complete Web3 ecosystem built around a central main token (VesikaCoin), where 
 
 ![Tests](https://img.shields.io/badge/tests-86%20passing-brightgreen) ![Solidity](https://img.shields.io/badge/solidity-0.8.19-blue) ![Network](https://img.shields.io/badge/deployed-Sepolia-purple) ![License](https://img.shields.io/badge/license-MIT-green)
 
+## 🚀 Live Deployment
+
+The frontend is live at **[https://vesika.art](https://vesika.art)**.
+
 ## 🌐 Live on Sepolia Testnet
 
 All contracts are deployed and configured on the Ethereum **Sepolia** testnet (Chain ID `11155111`):
